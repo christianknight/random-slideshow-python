@@ -101,9 +101,6 @@ class MySlideShow(tk.Toplevel):
         self.persistent_image = ImageTk.PhotoImage(image)
         self.label.configure(image=self.persistent_image)
 
-    def quit(self):
-        self.root.destroy()
-
 slideShow = HiddenRoot()
 slideShow.bind("<Escape>", lambda e: slideShow.quit())  # Terminate on "Esc" keypress
 slideShow.bind("<Insert>", lambda e: slideShow.pause())  # Pause slideshow on "Insert" keypress
