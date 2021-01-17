@@ -1,5 +1,4 @@
-# Python 3 - random photo slideshow using tkinter and pillow (PIL)
-# Usage: python3 random-slideshow.py [img_directory]
+# Usage: python slideshow.py [img_directory]
 
 import tkinter as tk
 from PIL import Image, ImageTk
