@@ -22,6 +22,9 @@ class HiddenRoot(tk.Tk):
         self.window.attributes('-topmost', 1)   # Force the slideshow to always be on top
         self.window.startSlideShow()
 
+    def pause(self):
+        input('Slideshow paused, press ENTER to resume')
+
 class MySlideShow(tk.Toplevel):
     def __init__(self, *args, **kwargs):
         tk.Toplevel.__init__(self, *args, **kwargs)
@@ -88,9 +91,6 @@ class MySlideShow(tk.Toplevel):
         # Create the new image 
         self.persistent_image = ImageTk.PhotoImage(image)
         self.label.configure(image=self.persistent_image)
-
-    def pause(self):
-        input('Slideshow paused, press any key to resume')
 
     def quit(self):
         self.root.destroy()
