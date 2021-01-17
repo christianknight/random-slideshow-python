@@ -47,10 +47,21 @@ class MySlideShow(tk.Toplevel):
         self.imageList = []
         self.imageListLen = 0
         self.duration = 4   # Default interval between photos is 4 seconds
+        self.size_max_x = self.winfo_screenwidth()   # Max photo width based on display dimensions
+        self.size_max_y = self.winfo_screenheight()  # Max photo height based on display dimensions
+        self.position_x = self.position_y = 0
 
-        # If present, read 'duration' from configuration file instead
+        # If present, read from configuration file
         if hasattr(config, 'duration'):
             self.duration = config.duration
+        if hasattr(config, 'size_max_x'):
+            self.size_max_x = config.size_max_x
+        if hasattr(config, 'size_max_y'):
+            self.size_max_y = config.size_max_y
+        if hasattr(config, 'position_x'):
+            self.position_x = config.position_x
+        if hasattr(config, 'position_y'):
+            self.position_y = config.position_y
 
         # Display as background image
         self.label = tk.Label(self)
@@ -91,16 +102,14 @@ class MySlideShow(tk.Toplevel):
 
         img_w, img_h = image.size
         print("Image size (x, y) = ({0}, {1})".format(img_w, img_h))
-        scr_w, scr_h = self.winfo_screenwidth(), self.winfo_screenheight()
-        print("Screen size (x, y) = ({0}, {1})".format(scr_w, scr_h))
-        width, height = min(scr_w, img_w), min(scr_h, img_h)
+        width, height = min(self.size_max_x, img_w), min(self.size_max_y, img_h)
         print("Scaled size (x, y) = ({0}, {1})".format(width, height))
         image.thumbnail((width, height), Image.ANTIALIAS)
 
         # Set window size after scaling the original image up/down to fit screen
         # and remove the border on the image
         scaled_w, scaled_h = image.size
-        self.wm_geometry("{}x{}+{}+{}".format(scaled_w,scaled_h,0,0))
+        self.wm_geometry("{}x{}+{}+{}".format(scaled_w,scaled_h,self.position_x,self.position_y))
         
         # Create the new image 
         self.persistent_image = ImageTk.PhotoImage(image)
