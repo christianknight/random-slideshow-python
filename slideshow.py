@@ -134,7 +134,7 @@ class MySlideShow(tk.Toplevel):
     def create_random_photo_montage(self):
         # Get a list of filepaths to 5 random photos
         random_file_paths = []
-        for x in range(5):
+        for x in range(8):
             random_file_paths.append(self.imageList[randrange(self.imageListLen)])
             print(random_file_paths[x])
 
