@@ -15,6 +15,9 @@ class HiddenRoot(tk.Tk):
         # ability to use key bindings (for "Esc" key)
         self.wm_geometry("0x0+0+0")
 
+        self.attributes('-alpha', 0.0)  # Shrink the window border size to 0
+        self.iconify()                  # Turn the window into an icon without destroying
+
         self.window = MySlideShow(self)
         self.window.startSlideShow()
 
