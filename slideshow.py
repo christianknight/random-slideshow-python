@@ -6,6 +6,7 @@ from PIL import Image, ImageTk
 import sys
 import os
 from random import randrange
+import config
 
 class HiddenRoot(tk.Tk):
     def __init__(self):
@@ -36,6 +37,11 @@ class MySlideShow(tk.Toplevel):
         self.persistent_image = None
         self.imageList = []
         self.imageListLen = 0
+        self.duration = 4   # Default interval between photos is 4 seconds
+
+        # If present, read 'duration' from configuration file instead
+        if hasattr(config, 'duration'):
+            self.duration = config.duration
 
         # Display as background image
         self.label = tk.Label(self)
@@ -47,6 +53,8 @@ class MySlideShow(tk.Toplevel):
         # Get image directory from command line or use current directory
         if len(sys.argv) == 2:
             curr_dir = sys.argv[1]
+        elif hasattr(config, 'img_directory'):  # If present, ready the photo directory path from the config file
+            curr_dir = config.img_directory
         else:
             curr_dir = '.'
 
@@ -61,10 +69,10 @@ class MySlideShow(tk.Toplevel):
         self.imageListLen = len(self.imageList)
         print("{0} images loaded".format(self.imageListLen))
 
-    def startSlideShow(self, delay=4): #delay in seconds
+    def startSlideShow(self):
         myimage = self.imageList[randrange(self.imageListLen)]  # Show a random image from the image list
         self.showImage(myimage)
-        self.after(delay*1000, self.startSlideShow)
+        self.after(self.duration * 1000, self.startSlideShow)
 
     def showImage(self, filename):
         image = Image.open(filename)
