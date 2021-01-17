@@ -5,6 +5,7 @@ from PIL import Image, ImageTk
 import sys
 import os
 from random import randrange
+from time import sleep
 
 try:
     import config
@@ -27,8 +28,10 @@ class HiddenRoot(tk.Tk):
         
         self.window.startSlideShow()
 
-    def pause(self):
-        input('Slideshow paused, press ENTER to resume')
+    def pause_for_x_seconds(self, seconds):
+        print('Pausing slideshow for {0} seconds...'.format(seconds))
+        sleep(seconds)
+        print('Resuming slideshow')
 
 class MySlideShow(tk.Toplevel):
     def __init__(self, *args, **kwargs):
@@ -112,5 +115,5 @@ class MySlideShow(tk.Toplevel):
 
 slideShow = HiddenRoot()
 slideShow.bind("<Escape>", lambda e: slideShow.quit())  # Terminate on "Esc" keypress
-slideShow.bind("<Insert>", lambda e: slideShow.pause())  # Pause slideshow on "Insert" keypress
+slideShow.bind("<Insert>", lambda e: slideShow.pause_for_x_seconds(20))  # Pause slideshow on "Insert" keypress
 slideShow.mainloop()
