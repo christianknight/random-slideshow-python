@@ -5,7 +5,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import sys
 import os
-import random
+from random import shuffle
 
 class HiddenRoot(tk.Tk):
     def __init__(self):
@@ -51,7 +51,7 @@ class MySlideShow(tk.Toplevel):
                     self.imageList.append(img_path)
 
         # Randomize the image sequence
-        random.shuffle(self.imageList)
+        shuffle(self.imageList)
 
     def startSlideShow(self, delay=4): #delay in seconds
         myimage = self.imageList[self.pixNum]
