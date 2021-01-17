@@ -53,6 +53,9 @@ class MySlideShow(tk.Toplevel):
         # Randomize the image sequence
         shuffle(self.imageList)
 
+        # Print the length of the image list
+        print("{0} images loaded".format(len(self.imageList)))
+
     def startSlideShow(self, delay=4): #delay in seconds
         myimage = self.imageList[self.pixNum]
         self.pixNum = (self.pixNum + 1) % len(self.imageList)
