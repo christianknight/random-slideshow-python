@@ -6,7 +6,11 @@ from PIL import Image, ImageTk
 import sys
 import os
 from random import randrange
-import config
+
+try:
+    import config
+except:
+    config = None
 
 class HiddenRoot(tk.Tk):
     def __init__(self):
