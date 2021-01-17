@@ -21,6 +21,9 @@ class HiddenRoot(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
 
+        # Shrink root window to size 0x0 to suppress window
+        self.wm_geometry("0x0+0+0")
+
         self.attributes('-alpha', 0.0)  # Shrink the window border size to 0
         self.iconify()                  # Turn the window into an icon without destroying
 
