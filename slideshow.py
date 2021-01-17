@@ -24,7 +24,12 @@ class HiddenRoot(tk.Tk):
         self.iconify()                  # Turn the window into an icon without destroying
 
         self.window = MySlideShow(self)
-        self.window.attributes('-topmost', 1)   # Force the slideshow to always be on top
+
+        if hasattr(config, 'topmost'):
+            self.window.attributes('-topmost', config.topmost)
+        else:
+            self.window.attributes('-topmost', 1)   # Force the slideshow to always be on top
+        
         self.window.startSlideShow()
 
     def pause(self):
