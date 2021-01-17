@@ -6,6 +6,7 @@ import sys
 import os
 from random import randrange
 from time import sleep
+from montage import montage_build
 
 try:
     import config
@@ -82,6 +83,8 @@ class MySlideShow(tk.Toplevel):
 
         self.getImages()
 
+        self.create_random_photo_montage()
+
     def getImages(self):
         # Get image directory from command line or use current directory
         if len(sys.argv) == 2:
@@ -127,6 +130,15 @@ class MySlideShow(tk.Toplevel):
         # Create the new image 
         self.persistent_image = ImageTk.PhotoImage(image)
         self.label.configure(image=self.persistent_image, bg='black')
+
+    def create_random_photo_montage(self):
+        # Get a list of filepaths to 5 random photos
+        random_file_paths = []
+        for x in range(5):
+            random_file_paths.append(self.imageList[randrange(self.imageListLen)])
+            print(random_file_paths[x])
+
+        montage_build(random_file_paths)
 
 slideShow = HiddenRoot()
 slideShow.mainloop()
