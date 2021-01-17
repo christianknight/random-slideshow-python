@@ -5,7 +5,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import sys
 import os
-from random import shuffle
+from random import randrange
 
 class HiddenRoot(tk.Tk):
     def __init__(self):
@@ -35,7 +35,7 @@ class MySlideShow(tk.Toplevel):
         # Does not clear image variable in "show_image()"
         self.persistent_image = None
         self.imageList = []
-        self.pixNum = 0
+        self.imageListLen = 0
 
         # Display as background image
         self.label = tk.Label(self)
@@ -57,15 +57,12 @@ class MySlideShow(tk.Toplevel):
                     print(img_path)
                     self.imageList.append(img_path)
 
-        # Randomize the image sequence
-        shuffle(self.imageList)
-
-        # Print the length of the image list
-        print("{0} images loaded".format(len(self.imageList)))
+        # Retrieve and print the length of the image list
+        self.imageListLen = len(self.imageList)
+        print("{0} images loaded".format(self.imageListLen))
 
     def startSlideShow(self, delay=4): #delay in seconds
-        myimage = self.imageList[self.pixNum]
-        self.pixNum = (self.pixNum + 1) % len(self.imageList)
+        myimage = self.imageList[randrange(self.imageListLen)]  # Show a random image from the image list
         self.showImage(myimage)
         self.after(delay*1000, self.startSlideShow)
 
