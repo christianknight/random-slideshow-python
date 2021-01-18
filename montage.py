@@ -49,4 +49,4 @@ def montage_save(montage):
     montage.save(filename)
 
 if __name__ == '__main__':
-    montage_build(sys.argv[1:])
+    montage_save(montage_build(sys.argv[1:]))
