@@ -152,6 +152,7 @@ class MySlideShow(tk.Toplevel):
             random_file_paths.append(self.imageList[randrange(self.imageListLen)])
             print(random_file_paths[x])
 
+        print("Building montage from {0} images".format(self.montage_size))
         montage = montage_build(random_file_paths)
 
         img_w, img_h = montage.size
