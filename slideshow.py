@@ -6,6 +6,7 @@ import sys
 import os
 from random import randrange
 from time import sleep
+import video_player
 
 try:
     import config
@@ -56,11 +57,14 @@ class MySlideShow(tk.Toplevel):
         self.persistent_image = None
         self.imageList = []
         self.imageListLen = 0
+        self.video_list = []
+        self.video_list_len = 0
         self.duration = 4   # Default interval between photos is 4 seconds
         self.size_max_x = self.winfo_screenwidth()  # Max photo width based on display dimensions
         self.size_max_y = self.winfo_screenheight() # Max photo height based on display dimensions
         self.position_x = self.position_y = 0       # starting x-y position, in pixels, from which the image is displayed relative to the top-left corner of the display, (0, 0)
         self.fullscreen = False;                    # flag to indicate whether the slideshow should take up the full screen with black background
+        self.video_player_enable = False            # flag to indicate if the slideshow is in video mode
 
         # If present, read from configuration file
         if hasattr(config, 'duration'):
@@ -75,18 +79,23 @@ class MySlideShow(tk.Toplevel):
             self.position_y = config.position_y
         if hasattr(config, 'fullscreen'):
             self.fullscreen = config.fullscreen
+        if hasattr(config, 'video_player_enable'):
+            self.video_player_enable = config.video_player_enable
 
         # Display as background image
         self.label = tk.Label(self)
         self.label.pack(side="top", fill="both", expand=True)
 
-        self.getImages()
+        if self.video_player_enable:
+            self.getVideos()
+        else:
+            self.getImages()
 
     def getImages(self):
         # Get image directory from command line or use current directory
         if len(sys.argv) == 2:
             curr_dir = sys.argv[1]
-        elif hasattr(config, 'img_directory'):  # If present, ready the photo directory path from the config file
+        elif hasattr(config, 'img_directory'):  # If present, read the photo directory path from the config file
             curr_dir = config.img_directory
         else:
             curr_dir = '.'
@@ -101,10 +110,34 @@ class MySlideShow(tk.Toplevel):
         self.imageListLen = len(self.imageList)
         print("{0} images loaded".format(self.imageListLen))
 
+    def getVideos(self):
+        # Get image directory from command line or use current directory
+        if len(sys.argv) == 2:
+            curr_dir = sys.argv[1]
+        elif hasattr(config, 'img_directory'):  # If present, read the photo directory path from the config file
+            curr_dir = config.img_directory
+        else:
+            curr_dir = '.'
+
+        for root, dirs, files in os.walk(curr_dir):
+            for f in files:
+                if f.endswith(".mp4"):
+                    vid_path = os.path.join(root, f)
+                    self.video_list.append(vid_path)
+
+        # Retrieve and print the length of the video list
+        self.video_list_len = len(self.video_list)
+        print("{0} videos loaded".format(self.video_list_len))
+
     def startSlideShow(self):
-        myimage = self.imageList[randrange(self.imageListLen)]  # Show a random image from the image list
-        self.showImage(myimage)
-        self.after(self.duration * 1000, self.startSlideShow)
+        if not self.video_player_enable:
+            myimage = self.imageList[randrange(self.imageListLen)]  # Show a random image from the image list
+            self.showImage(myimage)
+            self.after(self.duration * 1000, self.startSlideShow)
+        else:
+            video = self.video_list[randrange(self.video_list_len)]  # Show a random video from the video list
+            video_player.show_video(video)
+            self.startSlideShow()
 
     def showImage(self, filename):
         image = Image.open(filename)
