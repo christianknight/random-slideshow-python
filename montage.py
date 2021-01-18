@@ -6,14 +6,7 @@ from time import strftime
 from PIL import Image, ImageTk
 import random
 
-import tkinter as tk
-
 def montage_build(filenames):
-    root = tk.Tk()
-
-    screen_width = root.winfo_screenwidth()
-    screen_height = root.winfo_screenheight()
-
     images = [Image.open(filename) for filename in filenames]
 
     row_size = len(filenames) // 2
