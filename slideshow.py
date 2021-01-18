@@ -92,7 +92,6 @@ class MySlideShow(tk.Toplevel):
             for f in files:
                 if f.endswith(".png") or f.endswith(".jpg"):
                     img_path = os.path.join(root, f)
-                    print(img_path)
                     self.imageList.append(img_path)
 
         # Retrieve and print the length of the image list
