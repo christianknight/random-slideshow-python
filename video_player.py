@@ -52,7 +52,7 @@ def show_video(video_path):
      
       # Check for keypresses
       key = cv2.waitKey(25) & 0xFF
-      if key == ord('q'): # 'q' key
+      if key == ord('q') or key == 27: # 'q' or 'Esc' keys
         quit()
       elif key == 32: # Space bar
         break
