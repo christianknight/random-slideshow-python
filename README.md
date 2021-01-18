@@ -2,7 +2,16 @@ random-slideshow-python
 
 A python script for playing a randomized slideshow from images within a specified directory.
 
-Usage: `python slideshow.py [img_directory]`
+Required modules:
+- `Pillow`
+- `image`
+
+On Ubuntu, install the following packages:
+- `sudo apt-get install python3-tk python3-pil python3-pil.imagetk`
+
+Usage:
+- Windows - `python slideshow.py [img_directory]`
+- Ubuntu - `python3 slideshow.py [img_directory]`
 
 In the `config.py` file, the following settings can be modified: 
 - `duration` - time, in seconds, between image transitions. If no value is specified, the default duration is 4 seconds.
