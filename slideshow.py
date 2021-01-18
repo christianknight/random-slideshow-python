@@ -18,11 +18,11 @@ def pause_for_x_seconds(seconds):
         sleep(seconds)
         print('Resuming slideshow')
 
-def mouse_click(event):
-    global click_x, click_y
-    click_x = event.x
-    click_y = event.y
-    print("Mouse clicked at ({0}, {1})".format(click_x, click_y))
+def mouse_click_left(event):
+    global left_click_x, left_click_y
+    left_click_x = event.x
+    left_click_y = event.y
+    print("Mouse left-click at ({0}, {1})".format(left_click_x, left_click_y))
 
 class HiddenRoot(tk.Tk):
     def __init__(self):
@@ -49,7 +49,7 @@ class HiddenRoot(tk.Tk):
         self.window.bind("<Escape>", lambda e: quit())                  # terminate the slideshow on escape keypress
         self.window.bind("<Key>", lambda e: quit())                     # terminate the slideshow on any keypress
         self.window.bind("<Insert>", lambda e: pause_for_x_seconds(20)) # Pause slideshow for 20 seconds on "Insert" keypress
-        self.window.bind("<Button-1>", mouse_click)                     # capture the x-y mouse coordinates on single left-click
+        self.window.bind("<Button-1>", mouse_click_left)                # capture the x-y mouse coordinates on single left-click
 
         if self.window.montage_mode:
             self.window.startMontageSlideShow()
