@@ -12,6 +12,11 @@ try:
 except:
     config = None
 
+def pause_for_x_seconds(seconds):
+        print('Pausing slideshow for {0} seconds...'.format(seconds))
+        sleep(seconds)
+        print('Resuming slideshow')
+
 class HiddenRoot(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
@@ -21,17 +26,21 @@ class HiddenRoot(tk.Tk):
 
         self.window = MySlideShow(self)
 
+        self.window.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
+        self.window.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(),0,0))
+
         if hasattr(config, 'topmost'):
             self.window.attributes('-topmost', config.topmost)
         else:
             self.window.attributes('-topmost', 1)   # Force the slideshow to always be on top
-        
-        self.window.startSlideShow()
 
-    def pause_for_x_seconds(self, seconds):
-        print('Pausing slideshow for {0} seconds...'.format(seconds))
-        sleep(seconds)
-        print('Resuming slideshow')
+        self.window.bind("<Button-1>", lambda e: quit())                # terminate the slideshow on single-click
+        self.window.bind("<Double-Button-1>", lambda e: quit())         # terminate the slideshow on double-click
+        self.window.bind("<Escape>", lambda e: quit())                  # terminate the slideshow on escape keypress
+        self.window.bind("<Key>", lambda e: quit())                  # terminate the slideshow on any keypress
+        self.window.bind("<Insert>", lambda e: pause_for_x_seconds(20)) # Pause slideshow on "Insert" keypress
+
+        self.window.startSlideShow()
 
 class MySlideShow(tk.Toplevel):
     def __init__(self, *args, **kwargs):
@@ -107,13 +116,11 @@ class MySlideShow(tk.Toplevel):
         # Set window size after scaling the original image up/down to fit screen
         # and remove the border on the image
         scaled_w, scaled_h = image.size
-        self.wm_geometry("{}x{}+{}+{}".format(scaled_w,scaled_h,self.position_x,self.position_y))
+        # self.wm_geometry("{}x{}+{}+{}".format(scaled_w,scaled_h,self.position_x,self.position_y))
         
         # Create the new image 
         self.persistent_image = ImageTk.PhotoImage(image)
-        self.label.configure(image=self.persistent_image)
+        self.label.configure(image=self.persistent_image, bg='black')
 
 slideShow = HiddenRoot()
-slideShow.bind("<Escape>", lambda e: slideShow.quit())  # Terminate on "Esc" keypress
-slideShow.bind("<Insert>", lambda e: slideShow.pause_for_x_seconds(20))  # Pause slideshow on "Insert" keypress
 slideShow.mainloop()
