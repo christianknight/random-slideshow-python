@@ -7,7 +7,7 @@ Required modules:
 - `image`
 
 On Ubuntu, install the following packages:
-- `sudo apt-get install python3-tk python3-pil python3-pil.imagetk`
+- `sudo apt-get install python3-tk python3-pil python3-pil.imagetk gstreamer-1.0`
 
 Usage:
 - Windows - `python slideshow.py [img_directory]`
