@@ -34,11 +34,6 @@ class HiddenRoot(tk.Tk):
         self.window.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
         self.window.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(),0,0))
 
-        if hasattr(config, 'topmost'):
-            self.window.attributes('-topmost', config.topmost)
-        else:
-            self.window.attributes('-topmost', 1)   # Force the slideshow to always be on top
-
         self.window.bind("<Button-1>", lambda e: quit())                # terminate the slideshow on single-click
         self.window.bind("<Double-Button-1>", lambda e: quit())         # terminate the slideshow on double-click
         self.window.bind("<Escape>", lambda e: quit())                  # terminate the slideshow on escape keypress
@@ -61,6 +56,7 @@ class MySlideShow(tk.Toplevel):
         self.video_list = []
         self.video_list_len = 0
         self.duration = 4   # Default interval between photos is 4 seconds
+        self.topmost = True                         # boolean flag to set whether the slideshow is displayed on top of all other windows or not
         self.size_max_x = self.winfo_screenwidth()  # Max photo width based on display dimensions
         self.size_max_y = self.winfo_screenheight() # Max photo height based on display dimensions
         self.position_x = self.position_y = 0       # starting x-y position, in pixels, from which the image is displayed relative to the top-left corner of the display, (0, 0)
@@ -70,6 +66,8 @@ class MySlideShow(tk.Toplevel):
         # If present, read from configuration file
         if hasattr(config, 'duration'):
             self.duration = config.duration
+        if hasattr(config, 'topmost'):
+            self.topmost = config.topmost
         if hasattr(config, 'size_max_x'):
             self.size_max_x = config.size_max_x
         if hasattr(config, 'size_max_y'):
@@ -82,6 +80,9 @@ class MySlideShow(tk.Toplevel):
             self.fullscreen = config.fullscreen
         if hasattr(config, 'video_player_enable'):
             self.video_player_enable = config.video_player_enable
+
+        # Configure whether the slideshow is kept on top of all other windows
+        self.attributes('-topmost', self.topmost)
 
         # Display as background image
         self.label = tk.Label(self)
@@ -186,7 +187,7 @@ class MySlideShow(tk.Toplevel):
                 cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
                 cv2.moveWindow(window_name, 0, 0)
                 cv2.setWindowProperty(window_name, cv2.WND_PROP_ASPECT_RATIO, cv2.WINDOW_KEEPRATIO)
-                cv2.setWindowProperty(window_name, cv2.WND_PROP_TOPMOST, 1)
+                cv2.setWindowProperty(window_name, cv2.WND_PROP_TOPMOST, int(self.topmost))
 
                 # Display the frame
                 cv2.imshow(window_name, frame)
