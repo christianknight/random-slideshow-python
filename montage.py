@@ -33,7 +33,7 @@ def montage_build(filenames):
             offset_x += margin + image.size[0]
 
     montage = montage.crop((0, 0, max_x, max_y))
-    montage_save(montage)
+    return montage
 
 def montage_save(montage):
     basename = strftime("Montage %Y-%m-%d at %H.%M.%S.png")

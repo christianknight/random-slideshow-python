@@ -44,7 +44,7 @@ class HiddenRoot(tk.Tk):
         self.window.bind("<Key>", lambda e: quit())                  # terminate the slideshow on any keypress
         self.window.bind("<Insert>", lambda e: pause_for_x_seconds(20)) # Pause slideshow on "Insert" keypress
 
-        self.window.startSlideShow()
+        self.window.startMontageSlideShow()
 
 class MySlideShow(tk.Toplevel):
     def __init__(self, *args, **kwargs):
@@ -82,8 +82,6 @@ class MySlideShow(tk.Toplevel):
         self.label.pack(side="top", fill="both", expand=True)
 
         self.getImages()
-
-        self.create_random_photo_montage()
 
     def getImages(self):
         # Get image directory from command line or use current directory
@@ -131,14 +129,28 @@ class MySlideShow(tk.Toplevel):
         self.persistent_image = ImageTk.PhotoImage(image)
         self.label.configure(image=self.persistent_image, bg='black')
 
-    def create_random_photo_montage(self):
+    def startMontageSlideShow(self):
         # Get a list of filepaths to 5 random photos
         random_file_paths = []
         for x in range(8):
             random_file_paths.append(self.imageList[randrange(self.imageListLen)])
             print(random_file_paths[x])
 
-        montage_build(random_file_paths)
+        montage = montage_build(random_file_paths)
+
+        img_w, img_h = montage.size
+        width, height = min(self.size_max_x, img_w), min(self.size_max_y, img_h)
+        montage.thumbnail((width, height), Image.ANTIALIAS)
+
+        if not self.fullscreen:
+            scaled_w, scaled_h = montage.size
+            self.wm_geometry("{}x{}+{}+{}".format(scaled_w,scaled_h,self.position_x,self.position_y))
+        
+        # Create the new image 
+        self.persistent_image = ImageTk.PhotoImage(montage)
+        self.label.configure(image=self.persistent_image, bg='black')
+
+        self.after(self.duration * 1000, self.startMontageSlideShow)
 
 slideShow = HiddenRoot()
 slideShow.mainloop()
