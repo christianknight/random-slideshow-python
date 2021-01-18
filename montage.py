@@ -6,13 +6,20 @@ from time import strftime
 from PIL import Image, ImageTk
 import random
 
-row_size = 4
-margin = 3
+import tkinter as tk
 
 def montage_build(filenames):
+    root = tk.Tk()
+
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+
     images = [Image.open(filename) for filename in filenames]
 
-    width = max(image.size[0] + margin for image in images)*row_size
+    row_size = len(filenames) // 2
+    margin = 3
+
+    width = max(image.size[0] + margin for image in images) * row_size
     height = sum(image.size[1] + margin for image in images)
     montage = Image.new(mode='RGBA', size=(width, height), color=(0,0,0,0))
 

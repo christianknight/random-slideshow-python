@@ -44,7 +44,10 @@ class HiddenRoot(tk.Tk):
         self.window.bind("<Key>", lambda e: quit())                  # terminate the slideshow on any keypress
         self.window.bind("<Insert>", lambda e: pause_for_x_seconds(20)) # Pause slideshow on "Insert" keypress
 
-        self.window.startMontageSlideShow()
+        if self.window.montage_mode:
+            self.window.startMontageSlideShow()
+        else:
+            self.window.startSlideShow()
 
 class MySlideShow(tk.Toplevel):
     def __init__(self, *args, **kwargs):
@@ -62,6 +65,8 @@ class MySlideShow(tk.Toplevel):
         self.size_max_y = self.winfo_screenheight() # Max photo height based on display dimensions
         self.position_x = self.position_y = 0       # starting x-y position, in pixels, from which the image is displayed relative to the top-left corner of the display, (0, 0)
         self.fullscreen = False;                    # flag to indicate whether the slideshow should take up the full screen with black background
+        self.montage_mode = False
+        self.montage_size = 8
 
         # If present, read from configuration file
         if hasattr(config, 'duration'):
@@ -76,6 +81,10 @@ class MySlideShow(tk.Toplevel):
             self.position_y = config.position_y
         if hasattr(config, 'fullscreen'):
             self.fullscreen = config.fullscreen
+        if hasattr(config, 'montage_mode'):
+            self.montage_mode = config.montage_mode
+        if hasattr(config, 'montage_size'):
+            self.montage_size = config.montage_size
 
         # Display as background image
         self.label = tk.Label(self)
@@ -132,7 +141,7 @@ class MySlideShow(tk.Toplevel):
     def startMontageSlideShow(self):
         # Get a list of filepaths to 5 random photos
         random_file_paths = []
-        for x in range(8):
+        for x in range(self.montage_size):
             random_file_paths.append(self.imageList[randrange(self.imageListLen)])
             print(random_file_paths[x])
 

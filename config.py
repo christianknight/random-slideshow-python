@@ -6,3 +6,5 @@
 # position_x = 0		# starting horizontal position, in pixels, from which the image is displayed relative to the top-left corner of the display, (0, 0)
 # position_y = 0		# starting vertical position, in pixels, from which the image is displayed relative to the top-left corner of the display, (0, 0)
 # fullscreen = True		# flag to indicate whether the slideshow should take up the full screen with black background
+montage_mode = True
+montage_size = 10
