@@ -54,9 +54,10 @@ class MySlideShow(tk.Toplevel):
         self.imageList = []
         self.imageListLen = 0
         self.duration = 4   # Default interval between photos is 4 seconds
-        self.size_max_x = self.winfo_screenwidth()   # Max photo width based on display dimensions
-        self.size_max_y = self.winfo_screenheight()  # Max photo height based on display dimensions
-        self.position_x = self.position_y = 0
+        self.size_max_x = self.winfo_screenwidth()  # Max photo width based on display dimensions
+        self.size_max_y = self.winfo_screenheight() # Max photo height based on display dimensions
+        self.position_x = self.position_y = 0       # starting x-y position, in pixels, from which the image is displayed relative to the top-left corner of the display, (0, 0)
+        self.fullscreen = False;                    # flag to indicate whether the slideshow should take up the full screen with black background
 
         # If present, read from configuration file
         if hasattr(config, 'duration'):
@@ -69,6 +70,8 @@ class MySlideShow(tk.Toplevel):
             self.position_x = config.position_x
         if hasattr(config, 'position_y'):
             self.position_y = config.position_y
+        if hasattr(config, 'fullscreen'):
+            self.fullscreen = config.fullscreen
 
         # Display as background image
         self.label = tk.Label(self)
@@ -115,8 +118,9 @@ class MySlideShow(tk.Toplevel):
 
         # Set window size after scaling the original image up/down to fit screen
         # and remove the border on the image
-        scaled_w, scaled_h = image.size
-        # self.wm_geometry("{}x{}+{}+{}".format(scaled_w,scaled_h,self.position_x,self.position_y))
+        if not self.fullscreen:
+            scaled_w, scaled_h = image.size
+            self.wm_geometry("{}x{}+{}+{}".format(scaled_w,scaled_h,self.position_x,self.position_y))
         
         # Create the new image 
         self.persistent_image = ImageTk.PhotoImage(image)
