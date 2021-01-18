@@ -50,9 +50,12 @@ def show_video(video_path):
       # Display the frame
       cv2.imshow(window_name, frame)
      
-      # At any point, press 'q' on the keyboard to exit
-      if cv2.waitKey(25) & 0xFF == ord('q'): 
+      # Check for keypresses
+      key = cv2.waitKey(25) & 0xFF
+      if key == ord('q'): # 'q' key
         quit()
+      elif key == 32: # Space bar
+        break
      
     # Break the loop if no frame was captured (end of video)
     else:  
