@@ -1,5 +1,5 @@
 # duration = 6			# time, in seconds, between image transitions
-# img_directory = "."	# path to a folder containing image files (.jpg and .png only)
+# img_directory = "."		# path to a folder containing image files (.jpg and .png only)
 # topmost = True		# boolean flag to set whether the slideshow is displayed on top of all other windows or not
 # size_max_x = 192		# maxiumum size, in pixels, to display the image at in the horizontal (x) direction
 # size_max_y = 96		# maxiumum size, in pixels, to display the image at in the vertical (y) direction
