@@ -18,6 +18,12 @@ def pause_for_x_seconds(seconds):
         sleep(seconds)
         print('Resuming slideshow')
 
+def mouse_click(event):
+    global click_x, click_y
+    click_x = event.x
+    click_y = event.y
+    print("Mouse clicked at ({0}, {1})".format(click_x, click_y))
+
 class HiddenRoot(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
@@ -38,11 +44,12 @@ class HiddenRoot(tk.Tk):
         else:
             self.window.attributes('-topmost', 1)   # Force the slideshow to always be on top
 
-        self.window.bind("<Button-1>", lambda e: quit())                # terminate the slideshow on single-click
+        self.window.bind("<Button-3>", lambda e: quit())                # terminate the slideshow on single right-click
         self.window.bind("<Double-Button-1>", lambda e: quit())         # terminate the slideshow on double-click
         self.window.bind("<Escape>", lambda e: quit())                  # terminate the slideshow on escape keypress
-        self.window.bind("<Key>", lambda e: quit())                  # terminate the slideshow on any keypress
-        self.window.bind("<Insert>", lambda e: pause_for_x_seconds(20)) # Pause slideshow on "Insert" keypress
+        self.window.bind("<Key>", lambda e: quit())                     # terminate the slideshow on any keypress
+        self.window.bind("<Insert>", lambda e: pause_for_x_seconds(20)) # Pause slideshow for 20 seconds on "Insert" keypress
+        self.window.bind("<Button-1>", mouse_click)                     # capture the x-y mouse coordinates on single left-click
 
         if self.window.montage_mode:
             self.window.startMontageSlideShow()
