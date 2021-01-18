@@ -6,7 +6,8 @@ import sys
 import os
 from random import randrange
 from time import sleep
-import video_player
+import cv2 
+import numpy as np
 
 try:
     import config
@@ -136,7 +137,7 @@ class MySlideShow(tk.Toplevel):
             self.after(self.duration * 1000, self.startSlideShow)
         else:
             video = self.video_list[randrange(self.video_list_len)]  # Show a random video from the video list
-            video_player.show_video(video)
+            self.showVideo(video)
             self.startSlideShow()
 
     def showImage(self, filename):
@@ -160,6 +161,52 @@ class MySlideShow(tk.Toplevel):
         # Create the new image 
         self.persistent_image = ImageTk.PhotoImage(image)
         self.label.configure(image=self.persistent_image, bg='black')
+
+    def showVideo(self, filename):
+        # Read the input file
+        vid = cv2.VideoCapture(filename) 
+   
+        # Check if the file was opened successfully 
+        if (vid.isOpened() == False):  
+            print("Error opening video file")
+
+        # Get video dimensions, in pixels
+        video_width  = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
+        video_height = int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        print('Video dimensions: ({0}, {1})'.format(video_width, video_height))
+
+        # Playback loop - display each frame of the video until it is complete
+        while(vid.isOpened()): 
+            # Capture the next pending frame
+            ret, frame = vid.read()
+            # Check if the frame was captured successfully
+            if ret == True: 
+                # Resize the frame to fit the display
+                window_name = 'Frame'
+                cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
+                cv2.moveWindow(window_name, 0, 0)
+                cv2.setWindowProperty(window_name, cv2.WND_PROP_ASPECT_RATIO, cv2.WINDOW_KEEPRATIO)
+                cv2.setWindowProperty(window_name, cv2.WND_PROP_TOPMOST, 1)
+
+                # Display the frame
+                cv2.imshow(window_name, frame)
+
+                # Check for keypresses
+                key = cv2.waitKey(25) & 0xFF
+                if key == ord('q') or key == 27: # 'q' or 'Esc' keys
+                    quit()
+                elif key == 32: # Space bar
+                    break
+             
+            # Break the loop if no frame was captured (end of video)
+            else:  
+                break
+         
+        # When playback is complete, release the video capture object 
+        vid.release() 
+         
+        # Close the window
+        cv2.destroyAllWindows()
 
 slideShow = HiddenRoot()
 slideShow.mainloop()
