@@ -52,7 +52,7 @@ def show_video(video_path):
      
       # At any point, press 'q' on the keyboard to exit
       if cv2.waitKey(25) & 0xFF == ord('q'): 
-        break
+        quit()
      
     # Break the loop if no frame was captured (end of video)
     else:  
