@@ -23,22 +23,21 @@ def get_display_dimensions():
 
 def show_video(video_path):
   # Read the input file
-  cap = cv2.VideoCapture(video_path) 
+  vid = cv2.VideoCapture(video_path) 
    
   # Check if the file was opened successfully 
-  if (cap.isOpened() == False):  
+  if (vid.isOpened() == False):  
     print("Error opening video file")
 
   # Get video dimensions, in pixels
-  video_width  = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-  video_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+  video_width  = int(vid.get(cv2.CAP_PROP_FRAME_WIDTH))
+  video_height = int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT))
   print('Video dimensions: ({0}, {1})'.format(video_width, video_height))
 
   # Playback loop - display each frame of the video until it is complete
-  while(cap.isOpened()): 
-      
+  while(vid.isOpened()): 
     # Capture the next pending frame
-    ret, frame = cap.read()
+    ret, frame = vid.read()
     # Check if the frame was captured successfully
     if ret == True: 
       # Resize the frame to fit the display
@@ -62,7 +61,7 @@ def show_video(video_path):
       break
      
   # When playback is complete, release the video capture object 
-  cap.release() 
+  vid.release() 
      
   # Close the window
   cv2.destroyAllWindows()
