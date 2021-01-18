@@ -42,9 +42,10 @@ def show_video(video_path):
     if ret == True: 
       # Resize the frame to fit the display
       window_name = 'Frame'
-      cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+      cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
       cv2.moveWindow(window_name, 0, 0)
       cv2.setWindowProperty(window_name, cv2.WND_PROP_ASPECT_RATIO, cv2.WINDOW_KEEPRATIO)
+      cv2.setWindowProperty(window_name, cv2.WND_PROP_TOPMOST, 1)
 
       # Display the frame
       cv2.imshow(window_name, frame)
