@@ -40,6 +40,7 @@ class HiddenRoot(tk.Tk):
         self.window.bind("<Key>", lambda e: quit())                             # terminate the slideshow on any keypress
         self.window.bind("<Insert>", lambda e: self.pause_for_x_seconds(20))    # Pause slideshow for 20 seconds on "Insert" keypress
         self.window.bind("<Button-1>", self.mouse_click_left)                   # capture the x-y mouse coordinates on single left-click
+        self.window.bind("<Right>", self.right_arrow_pressed)                   # jump to the next image on right-arrow keypress
 
         if self.window.montage_mode:
             self.window.startMontageSlideShow()
@@ -56,6 +57,9 @@ class HiddenRoot(tk.Tk):
         left_click_x = event.x
         left_click_y = event.y
         print("Mouse left-click at ({0}, {1})".format(left_click_x, left_click_y))
+
+    def right_arrow_pressed(self, event):
+        self.window.display_random_image()  # get a random image from the image list
 
 class MySlideShow(tk.Toplevel):
     def __init__(self, *args, **kwargs):
