@@ -20,6 +20,7 @@ def montage_build(filenames):
     max_y = 0
     offset_x = 0
     offset_y = 0
+
     for i,image in enumerate(images):
         montage.paste(image, (offset_x, offset_y))
 

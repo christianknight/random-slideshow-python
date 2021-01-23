@@ -33,12 +33,13 @@ class HiddenRoot(tk.Tk):
         else:
             self.window.attributes('-topmost', 1)   # Force the slideshow to always be on top
 
-        self.window.bind("<Button-3>", lambda e: quit())                # terminate the slideshow on single right-click
-        self.window.bind("<Double-Button-1>", lambda e: quit())         # terminate the slideshow on double-click
-        self.window.bind("<Escape>", lambda e: quit())                  # terminate the slideshow on escape keypress
-        self.window.bind("<Key>", lambda e: quit())                     # terminate the slideshow on any keypress
-        self.window.bind("<Insert>", lambda e: self.pause_for_x_seconds(20)) # Pause slideshow for 20 seconds on "Insert" keypress
-        self.window.bind("<Button-1>", self.mouse_click_left)                # capture the x-y mouse coordinates on single left-click
+        # set key binding actions
+        self.window.bind("<Button-3>", lambda e: quit())                        # terminate the slideshow on single right-click
+        self.window.bind("<Double-Button-1>", lambda e: quit())                 # terminate the slideshow on double-click
+        self.window.bind("<Escape>", lambda e: quit())                          # terminate the slideshow on escape keypress
+        self.window.bind("<Key>", lambda e: quit())                             # terminate the slideshow on any keypress
+        self.window.bind("<Insert>", lambda e: self.pause_for_x_seconds(20))    # Pause slideshow for 20 seconds on "Insert" keypress
+        self.window.bind("<Button-1>", self.mouse_click_left)                   # capture the x-y mouse coordinates on single left-click
 
         if self.window.montage_mode:
             self.window.startMontageSlideShow()
@@ -71,9 +72,9 @@ class MySlideShow(tk.Toplevel):
         self.size_max_x = self.winfo_screenwidth()  # Max photo width based on display dimensions
         self.size_max_y = self.winfo_screenheight() # Max photo height based on display dimensions
         self.position_x = self.position_y = 0       # starting x-y position, in pixels, from which the image is displayed relative to the top-left corner of the display, (0, 0)
-        self.fullscreen = False;                    # flag to indicate whether the slideshow should take up the full screen with black background
-        self.montage_mode = False
-        self.montage_size = 8
+        self.fullscreen = False                     # flag to indicate whether the slideshow should take up the full screen with black background
+        self.montage_mode = False                   # flag to indicate if montage mode is activated (several tiled images)
+        self.montage_size = 8                       # number of photos to use in each montage when montage mode is activated
 
         # If present, read from configuration file
         if hasattr(config, 'duration'):
