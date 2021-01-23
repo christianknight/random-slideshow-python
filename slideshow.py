@@ -120,9 +120,12 @@ class MySlideShow(tk.Toplevel):
         print("{0} images loaded".format(self.imageListLen))
 
     def startSlideShow(self):
-        myimage = self.imageList[randrange(self.imageListLen)]  # Show a random image from the image list
-        self.showImage(myimage)
-        self.after(self.duration * 1000, self.startSlideShow)
+        self.display_random_image()                             # get a random image and show it
+        self.after(self.duration * 1000, self.startSlideShow)   # recursion - after the set duration, repeat
+
+    def display_random_image(self):
+        myimage = self.imageList[randrange(self.imageListLen)]  # get a random image from the image list
+        self.showImage(myimage)                                 # show the random image
 
     def showImage(self, filename):
         image = Image.open(filename)
