@@ -5,7 +5,6 @@ from PIL import Image, ImageTk
 import sys
 import os
 from random import randrange
-from time import sleep
 from montage import montage_build
 
 try:
@@ -38,7 +37,6 @@ class HiddenRoot(tk.Tk):
         self.window.bind("<Double-Button-1>", lambda e: quit())                 # terminate the slideshow on double-click
         self.window.bind("<Escape>", lambda e: quit())                          # terminate the slideshow on escape keypress
         self.window.bind("<Key>", lambda e: quit())                             # terminate the slideshow on any keypress
-        self.window.bind("<Insert>", lambda e: self.pause_for_x_seconds(20))    # Pause slideshow for 20 seconds on "Insert" keypress
         self.window.bind("<Button-1>", self.mouse_click_left)                   # capture the x-y mouse coordinates on single left-click
         self.window.bind("<Right>", self.right_arrow_pressed)                   # jump to the next image on right-arrow keypress
         self.window.bind("<space>", self.spacebar_pressed)                      # pause or resume the slideshow on spacebar keypress
@@ -49,11 +47,6 @@ class HiddenRoot(tk.Tk):
             self.window.startMontageSlideShow()
         else:
             self.window.startSlideShow()
-
-    def pause_for_x_seconds(self, seconds):
-        print('Pausing slideshow for {0} seconds...'.format(seconds))
-        sleep(seconds)
-        print('Resuming slideshow')
 
     def mouse_click_left(self, event):
         global left_click_x, left_click_y
