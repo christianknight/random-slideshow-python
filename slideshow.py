@@ -6,6 +6,7 @@ import sys
 import os
 from random import shuffle
 from montage import montage_build
+from shutil import copy
 
 try:
     import config
@@ -34,7 +35,7 @@ class HiddenRoot(tk.Tk):
 
         # set key binding actions
         self.window.bind("<Button-3>", lambda e: quit())                        # terminate the slideshow on single right-click
-        self.window.bind("<Double-Button-1>", lambda e: quit())                 # terminate the slideshow on double-click
+        self.window.bind("<Double-Button-1>", self.double_left_click)           # copy the current photo into the destination directory on double-click
         self.window.bind("<Escape>", lambda e: quit())                          # terminate the slideshow on escape keypress
         self.window.bind("<Key>", lambda e: quit())                             # terminate the slideshow on any keypress
         self.window.bind("<Button-1>", self.mouse_click_left)                   # capture the x-y mouse coordinates on single left-click
@@ -54,6 +55,12 @@ class HiddenRoot(tk.Tk):
         left_click_x = event.x
         left_click_y = event.y
         # print("Mouse left-click at ({0}, {1})".format(left_click_x, left_click_y))
+
+    def double_left_click(self, event):
+        if self.window.reverse_index < self.window.forward_index:                                   # check if backtracking
+            copy(self.window.imageList[self.window.reverse_index], self.window.image_save_path)     # copy the current file into the destination directory
+        else:
+            copy(self.window.imageList[self.window.forward_index], self.window.image_save_path)     # copy the current file into the destination directory
 
     def left_arrow_pressed(self, event):
         if self.window.reverse_index > 0:
@@ -106,6 +113,7 @@ class MySlideShow(tk.Toplevel):
         self.slideshow_paused = False               # flag to keep track of if the slideshow is paused from user input
         self.forward_index = -1                     # index for tracking position in playlist in order to show consecutive random images
         self.reverse_index = -1                     # index for tracking position in playlist in order to show the previously displayed images
+        self.image_save_path = '.'                  # directory path for saving selected photos
 
         # If present, read from configuration file
         if hasattr(config, 'duration'):
@@ -124,6 +132,8 @@ class MySlideShow(tk.Toplevel):
             self.montage_mode = config.montage_mode
         if hasattr(config, 'montage_size'):
             self.montage_size = config.montage_size
+        if hasattr(config, 'image_save_path'):
+            self.image_save_path = config.image_save_path
 
         # Display as background image
         self.label = tk.Label(self)
