@@ -53,7 +53,7 @@ class HiddenRoot(tk.Tk):
         global left_click_x, left_click_y
         left_click_x = event.x
         left_click_y = event.y
-        print("Mouse left-click at ({0}, {1})".format(left_click_x, left_click_y))
+        # print("Mouse left-click at ({0}, {1})".format(left_click_x, left_click_y))
 
     def left_arrow_pressed(self, event):
         if self.window.reverse_index > 0:
@@ -174,9 +174,9 @@ class MySlideShow(tk.Toplevel):
         print(filename)
 
         img_w, img_h = image.size
-        print("Image size (x, y) = ({0}, {1})".format(img_w, img_h))
+        # print("Image size (x, y) = ({0}, {1})".format(img_w, img_h))
         width, height = min(self.size_max_x, img_w), min(self.size_max_y, img_h)
-        print("Scaled size (x, y) = ({0}, {1})".format(width, height))
+        # print("Scaled size (x, y) = ({0}, {1})".format(width, height))
         image.thumbnail((width, height), Image.ANTIALIAS)
 
         # Set window size after scaling the original image up/down to fit screen
