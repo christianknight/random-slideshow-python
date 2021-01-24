@@ -4,7 +4,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import sys
 import os
-from random import randrange
+from random import shuffle
 from montage import montage_build
 
 try:
@@ -38,6 +38,7 @@ class HiddenRoot(tk.Tk):
         self.window.bind("<Escape>", lambda e: quit())                          # terminate the slideshow on escape keypress
         self.window.bind("<Key>", lambda e: quit())                             # terminate the slideshow on any keypress
         self.window.bind("<Button-1>", self.mouse_click_left)                   # capture the x-y mouse coordinates on single left-click
+        self.window.bind("<Left>", self.left_arrow_pressed)                     # jump to the previous image on left-arrow keypress
         self.window.bind("<Right>", self.right_arrow_pressed)                   # jump to the next image on right-arrow keypress
         self.window.bind("<space>", self.spacebar_pressed)                      # pause or resume the slideshow on spacebar keypress
         self.window.bind("<Up>", self.up_arrow_pressed)                         # increase the photo duration by 1 second on up arrow keypress
@@ -54,8 +55,19 @@ class HiddenRoot(tk.Tk):
         left_click_y = event.y
         print("Mouse left-click at ({0}, {1})".format(left_click_x, left_click_y))
 
+    def left_arrow_pressed(self, event):
+        if self.window.reverse_index > 0:
+            self.window.reverse_index -= 1  # decrement the reverse index to select the previous image in the playlist
+
+        self.window.showImage(self.window.imageList[self.window.reverse_index]) # show selected image
+
     def right_arrow_pressed(self, event):
-        self.window.display_random_image()  # get a random image from the image list
+        if self.window.reverse_index < self.window.forward_index:                   # already backtracking
+            self.window.reverse_index += 1                                          # index to image ahead of last displayed
+            self.window.showImage(self.window.imageList[self.window.reverse_index]) # show selected image
+        else:
+            self.window.index_next_random_image()                                   # going forward in random list, update the indexing variables
+            self.window.showImage(self.window.imageList[self.window.forward_index]) # show selected image
 
     def up_arrow_pressed(self, event):
         self.window.duration += 1   # increase the photo duration by 1 second
@@ -92,6 +104,8 @@ class MySlideShow(tk.Toplevel):
         self.montage_mode = False                   # flag to indicate if montage mode is activated (several tiled images)
         self.montage_size = 8                       # number of photos to use in each montage when montage mode is activated
         self.slideshow_paused = False               # flag to keep track of if the slideshow is paused from user input
+        self.forward_index = -1                     # index for tracking position in playlist in order to show consecutive random images
+        self.reverse_index = -1                     # index for tracking position in playlist in order to show the previously displayed images
 
         # If present, read from configuration file
         if hasattr(config, 'duration'):
@@ -116,6 +130,7 @@ class MySlideShow(tk.Toplevel):
         self.label.pack(side="top", fill="both", expand=True)
 
         self.getImages()
+        shuffle(self.imageList)     # randomize the image playlist
 
     def getImages(self):
         # Get image directory from command line or use current directory
@@ -137,14 +152,20 @@ class MySlideShow(tk.Toplevel):
         print("{0} images loaded".format(self.imageListLen))
 
     def startSlideShow(self):
-        if not self.slideshow_paused:                                    # check if the slideshow is currently puased
-            self.display_random_image()                             # get a random image and show it
-            
+        if not self.slideshow_paused:                           # check if the slideshow is currently puased
+            self.index_next_random_image()                      # going forward in random list, update the indexing variables
+            self.showImage(self.imageList[self.forward_index])  # get next photo from a random image and show it
+
         self.after(self.duration * 1000, self.startSlideShow)   # recursion - after the set duration, repeat
 
-    def display_random_image(self):
-        myimage = self.imageList[randrange(self.imageListLen)]  # get a random image from the image list
-        self.showImage(myimage)                                 # show the random image
+    def index_next_random_image(self):
+        if self.forward_index < self.imageListLen:  # check if the last image in the playlist was just displayed
+            self.forward_index += 1                 # increment the playlist index
+        else:                                       # randomize the image playlist and reset the indices to the beginning
+            self.shuffle(imageList)
+            self.forward_index = 0
+
+        self.reverse_index = self.forward_index     # reset the reverse index (no longer back-tracking)
 
     def showImage(self, filename):
         image = Image.open(filename)
