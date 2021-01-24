@@ -42,6 +42,8 @@ class HiddenRoot(tk.Tk):
         self.window.bind("<Button-1>", self.mouse_click_left)                   # capture the x-y mouse coordinates on single left-click
         self.window.bind("<Right>", self.right_arrow_pressed)                   # jump to the next image on right-arrow keypress
         self.window.bind("<space>", self.spacebar_pressed)                      # pause or resume the slideshow on spacebar keypress
+        self.window.bind("<Up>", self.up_arrow_pressed)                         # increase the photo duration by 1 second on up arrow keypress
+        self.window.bind("<Down>", self.down_arrow_pressed)                     # decrease the photo duration by 1 second on down arrow keypress
 
         if self.window.montage_mode:
             self.window.startMontageSlideShow()
@@ -61,6 +63,14 @@ class HiddenRoot(tk.Tk):
 
     def right_arrow_pressed(self, event):
         self.window.display_random_image()  # get a random image from the image list
+
+    def up_arrow_pressed(self, event):
+        self.window.duration += 1   # increase the photo duration by 1 second
+        print("Photo duration: {0} seconds".format(self.window.duration))
+
+    def down_arrow_pressed(self, event):
+        self.window.duration -= 1   # decrease the photo duration by 1 second
+        print("Photo duration: {0} seconds".format(self.window.duration))
 
     def spacebar_pressed(self, event):
         if self.window.slideshow_paused == False:
