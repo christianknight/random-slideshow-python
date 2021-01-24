@@ -41,6 +41,7 @@ class HiddenRoot(tk.Tk):
         self.window.bind("<Insert>", lambda e: self.pause_for_x_seconds(20))    # Pause slideshow for 20 seconds on "Insert" keypress
         self.window.bind("<Button-1>", self.mouse_click_left)                   # capture the x-y mouse coordinates on single left-click
         self.window.bind("<Right>", self.right_arrow_pressed)                   # jump to the next image on right-arrow keypress
+        self.window.bind("<space>", self.spacebar_pressed)                      # pause or resume the slideshow on spacebar keypress
 
         if self.window.montage_mode:
             self.window.startMontageSlideShow()
@@ -61,6 +62,14 @@ class HiddenRoot(tk.Tk):
     def right_arrow_pressed(self, event):
         self.window.display_random_image()  # get a random image from the image list
 
+    def spacebar_pressed(self, event):
+        if self.window.slideshow_paused == False:
+            print("Slideshow paused, press space to resume")
+            self.window.slideshow_paused = True
+        else:
+            print("Resuming slideshow")
+            self.window.slideshow_paused = False
+
 class MySlideShow(tk.Toplevel):
     def __init__(self, *args, **kwargs):
         tk.Toplevel.__init__(self, *args, **kwargs)
@@ -79,6 +88,7 @@ class MySlideShow(tk.Toplevel):
         self.fullscreen = False                     # flag to indicate whether the slideshow should take up the full screen with black background
         self.montage_mode = False                   # flag to indicate if montage mode is activated (several tiled images)
         self.montage_size = 8                       # number of photos to use in each montage when montage mode is activated
+        self.slideshow_paused = False               # flag to keep track of if the slideshow is paused from user input
 
         # If present, read from configuration file
         if hasattr(config, 'duration'):
@@ -124,7 +134,9 @@ class MySlideShow(tk.Toplevel):
         print("{0} images loaded".format(self.imageListLen))
 
     def startSlideShow(self):
-        self.display_random_image()                             # get a random image and show it
+        if not self.slideshow_paused:                                    # check if the slideshow is currently puased
+            self.display_random_image()                             # get a random image and show it
+            
         self.after(self.duration * 1000, self.startSlideShow)   # recursion - after the set duration, repeat
 
     def display_random_image(self):
