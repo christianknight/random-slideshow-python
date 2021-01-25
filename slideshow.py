@@ -59,8 +59,10 @@ class HiddenRoot(tk.Tk):
     def double_left_click(self, event):
         if self.window.reverse_index < self.window.forward_index:                                   # check if backtracking
             copy(self.window.imageList[self.window.reverse_index], self.window.image_save_path)     # copy the current file into the destination directory
+            print("{0} copied to {1}".format(self.window.imageList[self.window.reverse_index], self.window.image_save_path))
         else:
             copy(self.window.imageList[self.window.forward_index], self.window.image_save_path)     # copy the current file into the destination directory
+            print("{0} copied to {1}".format(self.window.imageList[self.window.forward_index], self.window.image_save_path))
 
     def left_arrow_pressed(self, event):
         if self.window.reverse_index > 0:
