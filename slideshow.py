@@ -171,10 +171,10 @@ class MySlideShow(tk.Toplevel):
         self.after(self.duration * 1000, self.startSlideShow)   # recursion - after the set duration, repeat
 
     def index_next_random_image(self):
-        if self.forward_index < self.imageListLen:  # check if the last image in the playlist was just displayed
-            self.forward_index += 1                 # increment the playlist index
-        else:                                       # randomize the image playlist and reset the indices to the beginning
-            self.shuffle(imageList)
+        if self.forward_index < self.imageListLen - 1:  # check if the last image in the playlist was just displayed
+            self.forward_index += 1                     # increment the playlist index
+        else:                                           # randomize the image playlist and reset the indices to the beginning
+            shuffle(self.imageList)
             self.forward_index = 0
 
         self.reverse_index = self.forward_index     # reset the reverse index (no longer back-tracking)
