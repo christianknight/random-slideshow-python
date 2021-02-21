@@ -4,7 +4,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import sys
 import os
-from random import shuffle
+from random import shuffle, randrange
 from montage import montage_build
 from shutil import copy
 
