@@ -64,18 +64,26 @@ class HiddenRoot(tk.Tk):
             print("{0} copied to {1}".format(self.window.imageList[self.window.forward_index], self.window.image_save_path))
 
     def left_arrow_pressed(self, event):
+        self.window.slideshow_cancel()      # kill the slideshow
+        
         if self.window.reverse_index > 0:
             self.window.reverse_index -= 1  # decrement the reverse index to select the previous image in the playlist
 
         self.window.showImage(self.window.imageList[self.window.reverse_index]) # show selected image
 
+        self.window._job = self.window.after(self.window.duration * 1000, self.window.startSlideShow)       # after the set duration, continue the slideshow
+
     def right_arrow_pressed(self, event):
+        self.window.slideshow_cancel()                                              # kill the slideshow
+
         if self.window.reverse_index < self.window.forward_index:                   # already backtracking
             self.window.reverse_index += 1                                          # index to image ahead of last displayed
             self.window.showImage(self.window.imageList[self.window.reverse_index]) # show selected image
         else:
             self.window.index_next_random_image()                                   # going forward in random list, update the indexing variables
             self.window.showImage(self.window.imageList[self.window.forward_index]) # show selected image
+
+        self.window._job = self.window.after(self.window.duration * 1000, self.window.startSlideShow)       # after the set duration, continue the slideshow
 
     def up_arrow_pressed(self, event):
         self.window.duration += 1   # increase the photo duration by 1 second
@@ -98,6 +106,9 @@ class MySlideShow(tk.Toplevel):
         tk.Toplevel.__init__(self, *args, **kwargs)
         # Remove window decorations 
         self.overrideredirect(True)
+
+        # For storing job ID when running tk.after()
+        self._job = None
 
         # Save reference to photo so that garbage collection
         # Does not clear image variable in "show_image()"
@@ -167,7 +178,7 @@ class MySlideShow(tk.Toplevel):
             self.index_next_random_image()                      # going forward in random list, update the indexing variables
             self.showImage(self.imageList[self.forward_index])  # get next photo from a random image and show it
 
-        self.after(self.duration * 1000, self.startSlideShow)   # recursion - after the set duration, repeat
+        self._job = self.after(self.duration * 1000, self.startSlideShow)   # recursion - after the set duration, repeat
 
     def index_next_random_image(self):
         if self.forward_index < self.imageListLen - 1:  # check if the last image in the playlist was just displayed
@@ -222,7 +233,12 @@ class MySlideShow(tk.Toplevel):
         self.persistent_image = ImageTk.PhotoImage(montage)
         self.label.configure(image=self.persistent_image, bg='black')
 
-        self.after(self.duration * 1000, self.startMontageSlideShow)
+        self._job = self.after(self.duration * 1000, self.startMontageSlideShow)
+
+    def slideshow_cancel(self):
+        if self._job is not None:
+            self.after_cancel(self._job)
+            self._job = None
 
 slideShow = HiddenRoot()
 slideShow.mainloop()
