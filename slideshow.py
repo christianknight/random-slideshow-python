@@ -37,7 +37,6 @@ class HiddenRoot(tk.Tk):
         self.window.bind("<Button-3>", lambda e: quit())                        # terminate the slideshow on single right-click
         self.window.bind("<Double-Button-1>", self.double_left_click)           # copy the current photo into the destination directory on double-click
         self.window.bind("<Escape>", lambda e: quit())                          # terminate the slideshow on escape keypress
-        self.window.bind("<Key>", lambda e: quit())                             # terminate the slideshow on any keypress
         self.window.bind("<Button-1>", self.mouse_click_left)                   # capture the x-y mouse coordinates on single left-click
         self.window.bind("<Left>", self.left_arrow_pressed)                     # jump to the previous image on left-arrow keypress
         self.window.bind("<Right>", self.right_arrow_pressed)                   # jump to the next image on right-arrow keypress
