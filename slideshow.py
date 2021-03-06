@@ -43,6 +43,7 @@ class HiddenRoot(tk.Tk):
         self.window.bind("<space>", self.spacebar_pressed)                      # pause or resume the slideshow on spacebar keypress
         self.window.bind("<Up>", self.up_arrow_pressed)                         # increase the photo duration by 1 second on up arrow keypress
         self.window.bind("<Down>", self.down_arrow_pressed)                     # decrease the photo duration by 1 second on down arrow keypress
+        self.window.bind("<F11>", self.f11_pressed)                             # toggle fullscreen mode on F11 keypress
 
         if self.window.montage_mode:
             self.window.startMontageSlideShow()
@@ -101,6 +102,18 @@ class HiddenRoot(tk.Tk):
             print("Resuming slideshow")
             self.window.slideshow_paused = False
 
+    def f11_pressed(self, event):
+        if self.window.fullscreen == False:
+            print("Entering fullscreen mode")
+            self.window.fullscreen = True
+            self.window.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
+            self.window.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(), 0, 0))
+        else:
+            print("Leaving fullscreen mode")
+            self.window.fullscreen = False
+            self.window.configure(bg='black', width=self.window.scaled_w, height=self.window.scaled_h)
+            self.window.wm_geometry("{}x{}+{}+{}".format(self.window.scaled_w,self.window.scaled_h, 0, 0))
+
 class MySlideShow(tk.Toplevel):
     def __init__(self, *args, **kwargs):
         tk.Toplevel.__init__(self, *args, **kwargs)
@@ -126,6 +139,8 @@ class MySlideShow(tk.Toplevel):
         self.forward_index = -1                     # index for tracking position in playlist in order to show consecutive random images
         self.reverse_index = -1                     # index for tracking position in playlist in order to show the previously displayed images
         self.image_save_path = '.'                  # directory path for saving selected photos
+        self.scaled_w = None                        # for holding the width of the currently displayed image
+        self.scaled_h = None                        # for holding the height of the currently displayed image
 
         # If present, read from configuration file
         if hasattr(config, 'duration'):
@@ -201,11 +216,13 @@ class MySlideShow(tk.Toplevel):
         # print("Scaled size (x, y) = ({0}, {1})".format(width, height))
         image.thumbnail((width, height), Image.ANTIALIAS)
 
+        # Store the size of the image to be displayed
+        self.scaled_w, self.scaled_h = image.size
+
         # Set window size after scaling the original image up/down to fit screen
         # and remove the border on the image
         if not self.fullscreen:
-            scaled_w, scaled_h = image.size
-            self.wm_geometry("{}x{}+{}+{}".format(scaled_w,scaled_h,self.position_x,self.position_y))
+            self.wm_geometry("{}x{}+{}+{}".format(self.scaled_w, self.scaled_h, self.position_x, self.position_y))
         
         # Create the new image 
         self.persistent_image = ImageTk.PhotoImage(image)
