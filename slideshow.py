@@ -36,7 +36,7 @@ class HiddenRoot(tk.Tk):
         self.window.bind("<Button-1>", lambda e: quit())                # terminate the slideshow on single-click
         self.window.bind("<Double-Button-1>", lambda e: quit())         # terminate the slideshow on double-click
         self.window.bind("<Escape>", lambda e: quit())                  # terminate the slideshow on escape keypress
-        self.window.bind("<Key>", lambda e: quit())                  # terminate the slideshow on any keypress
+        self.window.bind("<Key>", lambda e: quit())                     # terminate the slideshow on any keypress
         self.window.bind("<Insert>", lambda e: pause_for_x_seconds(20)) # Pause slideshow on "Insert" keypress
 
         self.window.startSlideShow()
@@ -44,7 +44,7 @@ class HiddenRoot(tk.Tk):
 class MySlideShow(tk.Toplevel):
     def __init__(self, *args, **kwargs):
         tk.Toplevel.__init__(self, *args, **kwargs)
-        # Remove window decorations 
+        # Remove window decorations
         self.overrideredirect(True)
 
         # Save reference to photo so that garbage collection
@@ -158,8 +158,8 @@ class MySlideShow(tk.Toplevel):
         if not self.fullscreen:
             scaled_w, scaled_h = image.size
             self.wm_geometry("{}x{}+{}+{}".format(scaled_w,scaled_h,self.position_x,self.position_y))
-        
-        # Create the new image 
+
+        # Create the new image
         self.persistent_image = ImageTk.PhotoImage(image)
         self.label.configure(image=self.persistent_image, bg='black')
 
