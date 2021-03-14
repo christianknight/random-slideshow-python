@@ -23,9 +23,9 @@ class Main:
         self.decode = Gst.ElementFactory.make("decodebin", "decode")
         self.pipeline.add(self.decode)
         # connecting the decoder's "pad-added" event to a handler: the decoder doesn't yet have an output pad (a source), it's created at runtime when the decoders starts receiving some data
-        self.decode.connect("pad-added", self.decode_src_created) 
+        self.decode.connect("pad-added", self.decode_src_created)
 
-        # setting up (and adding) the alsasin, which is actually going to "play" the sound it receives
+        # setting up (and adding) the alsasink, which is actually going to play the sound it receives
         self.sink = Gst.ElementFactory.make("alsasink", "sink")
         self.pipeline.add(self.sink)
 

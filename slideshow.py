@@ -137,6 +137,7 @@ class MySlideShow(tk.Toplevel):
             self.after(self.duration * 1000, self.startSlideShow)
         else:
             video = self.video_list[randrange(self.video_list_len)]  # Show a random video from the video list
+            print(video)                                             # print the path to the current video
             video_player = player.Main(video)
             video_player.run();
             self.startSlideShow()
