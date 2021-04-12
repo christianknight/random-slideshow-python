@@ -25,95 +25,6 @@ class HiddenRoot(tk.Tk):
 
         self.window = MySlideShow(self)
 
-        self.window.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
-        self.window.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(),0,0))
-
-        if hasattr(config, 'topmost'):
-            self.window.attributes('-topmost', config.topmost)
-        else:
-            self.window.attributes('-topmost', 1)   # Force the slideshow to always be on top
-
-        # set key binding actions
-        self.window.bind("<Button-3>", lambda e: quit())                        # terminate the slideshow on single right-click
-        self.window.bind("<Double-Button-1>", self.double_left_click)           # copy the current photo into the destination directory on double-click
-        self.window.bind("<Escape>", lambda e: quit())                          # terminate the slideshow on escape keypress
-        self.window.bind("<Button-1>", self.mouse_click_left)                   # capture the x-y mouse coordinates on single left-click
-        self.window.bind("<Left>", self.left_arrow_pressed)                     # jump to the previous image on left-arrow keypress
-        self.window.bind("<Right>", self.right_arrow_pressed)                   # jump to the next image on right-arrow keypress
-        self.window.bind("<space>", self.spacebar_pressed)                      # pause or resume the slideshow on spacebar keypress
-        self.window.bind("<Up>", self.up_arrow_pressed)                         # increase the photo duration by 1 second on up arrow keypress
-        self.window.bind("<Down>", self.down_arrow_pressed)                     # decrease the photo duration by 1 second on down arrow keypress
-        self.window.bind("<F11>", self.f11_pressed)                             # toggle fullscreen mode on F11 keypress
-
-        if self.window.montage_mode:
-            self.window.startMontageSlideShow()
-        else:
-            self.window.startSlideShow()
-
-    def mouse_click_left(self, event):
-        global left_click_x, left_click_y
-        left_click_x = event.x
-        left_click_y = event.y
-        # print("Mouse left-click at ({0}, {1})".format(left_click_x, left_click_y))
-
-    def double_left_click(self, event):
-        if self.window.reverse_index < self.window.forward_index:                                   # check if backtracking
-            copy(self.window.imageList[self.window.reverse_index], self.window.image_save_path)     # copy the current file into the destination directory
-            print("{0} copied to {1}".format(self.window.imageList[self.window.reverse_index], self.window.image_save_path))
-        else:
-            copy(self.window.imageList[self.window.forward_index], self.window.image_save_path)     # copy the current file into the destination directory
-            print("{0} copied to {1}".format(self.window.imageList[self.window.forward_index], self.window.image_save_path))
-
-    def left_arrow_pressed(self, event):
-        self.window.slideshow_cancel()      # kill the slideshow
-        
-        if self.window.reverse_index > 0:
-            self.window.reverse_index -= 1  # decrement the reverse index to select the previous image in the playlist
-
-        self.window.showImage(self.window.imageList[self.window.reverse_index]) # show selected image
-
-        self.window._job = self.window.after(self.window.duration * 1000, self.window.startSlideShow)       # after the set duration, continue the slideshow
-
-    def right_arrow_pressed(self, event):
-        self.window.slideshow_cancel()                                              # kill the slideshow
-
-        if self.window.reverse_index < self.window.forward_index:                   # already backtracking
-            self.window.reverse_index += 1                                          # index to image ahead of last displayed
-            self.window.showImage(self.window.imageList[self.window.reverse_index]) # show selected image
-        else:
-            self.window.index_next_random_image()                                   # going forward in random list, update the indexing variables
-            self.window.showImage(self.window.imageList[self.window.forward_index]) # show selected image
-
-        self.window._job = self.window.after(self.window.duration * 1000, self.window.startSlideShow)       # after the set duration, continue the slideshow
-
-    def up_arrow_pressed(self, event):
-        self.window.duration += 1   # increase the photo duration by 1 second
-        print("Photo duration: {0} seconds".format(self.window.duration))
-
-    def down_arrow_pressed(self, event):
-        self.window.duration -= 1   # decrease the photo duration by 1 second
-        print("Photo duration: {0} seconds".format(self.window.duration))
-
-    def spacebar_pressed(self, event):
-        if self.window.slideshow_paused == False:
-            print("Slideshow paused, press space to resume")
-            self.window.slideshow_paused = True
-        else:
-            print("Resuming slideshow")
-            self.window.slideshow_paused = False
-
-    def f11_pressed(self, event):
-        if self.window.fullscreen == False:
-            print("Entering fullscreen mode")
-            self.window.fullscreen = True
-            self.window.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
-            self.window.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(), 0, 0))
-        else:
-            print("Leaving fullscreen mode")
-            self.window.fullscreen = False
-            self.window.configure(bg='black', width=self.window.scaled_w, height=self.window.scaled_h)
-            self.window.wm_geometry("{}x{}+{}+{}".format(self.window.scaled_w,self.window.scaled_h, 0, 0))
-
 class MySlideShow(tk.Toplevel):
     def __init__(self, *args, **kwargs):
         tk.Toplevel.__init__(self, *args, **kwargs)
@@ -161,13 +72,37 @@ class MySlideShow(tk.Toplevel):
             self.montage_size = config.montage_size
         if hasattr(config, 'image_save_path'):
             self.image_save_path = config.image_save_path
+        if hasattr(config, 'topmost'):
+            self.attributes('-topmost', config.topmost)
+        else:
+            self.attributes('-topmost', 1)   # Force the slideshow to always be on top
+
+        self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
+        self.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(),0,0))
 
         # Display as background image
         self.label = tk.Label(self)
         self.label.pack(side="top", fill="both", expand=True)
 
+        # set key binding actions
+        self.bind("<Button-3>", lambda e: quit())                        # terminate the slideshow on single right-click
+        self.bind("<Double-Button-1>", self.double_left_click)           # copy the current photo into the destination directory on double-click
+        self.bind("<Escape>", lambda e: quit())                          # terminate the slideshow on escape keypress
+        self.bind("<Button-1>", self.mouse_click_left)                   # capture the x-y mouse coordinates on single left-click
+        self.bind("<Left>", self.left_arrow_pressed)                     # jump to the previous image on left-arrow keypress
+        self.bind("<Right>", self.right_arrow_pressed)                   # jump to the next image on right-arrow keypress
+        self.bind("<space>", self.spacebar_pressed)                      # pause or resume the slideshow on spacebar keypress
+        self.bind("<Up>", self.up_arrow_pressed)                         # increase the photo duration by 1 second on up arrow keypress
+        self.bind("<Down>", self.down_arrow_pressed)                     # decrease the photo duration by 1 second on down arrow keypress
+        self.bind("<F11>", self.f11_pressed)                             # toggle fullscreen mode on F11 keypress
+
         self.getImages()
         shuffle(self.imageList)     # randomize the image playlist
+
+        if self.montage_mode:
+            self.startMontageSlideShow()
+        else:
+            self.startSlideShow()
 
     def getImages(self):
         # Get image directory from command line or use current directory
@@ -256,6 +191,70 @@ class MySlideShow(tk.Toplevel):
         if self._job is not None:
             self.after_cancel(self._job)
             self._job = None
+
+    def mouse_click_left(self, event):
+        global left_click_x, left_click_y
+        left_click_x = event.x
+        left_click_y = event.y
+        # print("Mouse left-click at ({0}, {1})".format(left_click_x, left_click_y))
+
+    def double_left_click(self, event):
+        if self.reverse_index < self.forward_index:                                   # check if backtracking
+            copy(self.imageList[self.reverse_index], self.image_save_path)     # copy the current file into the destination directory
+            print("{0} copied to {1}".format(self.imageList[self.reverse_index], self.image_save_path))
+        else:
+            copy(self.imageList[self.forward_index], self.image_save_path)     # copy the current file into the destination directory
+            print("{0} copied to {1}".format(self.imageList[self.forward_index], self.image_save_path))
+
+    def left_arrow_pressed(self, event):
+        self.slideshow_cancel()      # kill the slideshow
+        
+        if self.reverse_index > 0:
+            self.reverse_index -= 1  # decrement the reverse index to select the previous image in the playlist
+
+        self.showImage(self.imageList[self.reverse_index]) # show selected image
+
+        self._job = self.after(self.duration * 1000, self.startSlideShow)       # after the set duration, continue the slideshow
+
+    def right_arrow_pressed(self, event):
+        self.slideshow_cancel()                                              # kill the slideshow
+
+        if self.reverse_index < self.forward_index:                   # already backtracking
+            self.reverse_index += 1                                          # index to image ahead of last displayed
+            self.showImage(self.imageList[self.reverse_index]) # show selected image
+        else:
+            self.index_next_random_image()                                   # going forward in random list, update the indexing variables
+            self.showImage(self.imageList[self.forward_index]) # show selected image
+
+        self._job = self.after(self.duration * 1000, self.startSlideShow)       # after the set duration, continue the slideshow
+
+    def up_arrow_pressed(self, event):
+        self.duration += 1   # increase the photo duration by 1 second
+        print("Photo duration: {0} seconds".format(self.duration))
+
+    def down_arrow_pressed(self, event):
+        self.duration -= 1   # decrease the photo duration by 1 second
+        print("Photo duration: {0} seconds".format(self.duration))
+
+    def spacebar_pressed(self, event):
+        if self.slideshow_paused == False:
+            print("Slideshow paused, press space to resume")
+            self.slideshow_paused = True
+        else:
+            print("Resuming slideshow")
+            self.slideshow_paused = False
+
+    def f11_pressed(self, event):
+        if self.fullscreen == False:
+            print("Entering fullscreen mode")
+            self.fullscreen = True
+            self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
+            self.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(), 0, 0))
+        else:
+            print("Leaving fullscreen mode")
+            self.fullscreen = False
+            self.configure(bg='black', width=self.scaled_w, height=self.scaled_h)
+            self.wm_geometry("{}x{}+{}+{}".format(self.scaled_w,self.scaled_h, 0, 0))
 
 slideShow = HiddenRoot()
 slideShow.mainloop()
