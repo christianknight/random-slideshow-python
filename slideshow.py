@@ -8,12 +8,14 @@ from random import shuffle, randrange
 from montage import montage_build
 from shutil import copy
 from time import sleep
-import player
 
 try:
     import config
 except:
     config = None
+
+if hasattr(config, 'video_player_enable'):
+    import player
 
 class HiddenRoot(tk.Tk):
     def __init__(self):
