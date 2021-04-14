@@ -9,3 +9,4 @@
 # fullscreen = True		# flag to indicate whether the slideshow should take up the full screen with black background
 # montage_mode = True	# flag to indicate if montage mode is activated (several tiled images)
 # montage_size = 10		# number of photos to use in each montage when montage mode is activated
+# video_player_enable = True	# flag to indicate if the slideshow is in video mode

@@ -7,6 +7,8 @@ import os
 from random import shuffle, randrange
 from montage import montage_build
 from shutil import copy
+from time import sleep
+import player
 
 try:
     import config
@@ -28,7 +30,7 @@ class HiddenRoot(tk.Tk):
 class MySlideShow(tk.Toplevel):
     def __init__(self, *args, **kwargs):
         tk.Toplevel.__init__(self, *args, **kwargs)
-        # Remove window decorations 
+        # Remove window decorations
         self.overrideredirect(True)
 
         # For storing job ID when running tk.after()
@@ -39,6 +41,8 @@ class MySlideShow(tk.Toplevel):
         self.persistent_image = None
         self.imageList = []
         self.imageListLen = 0
+        self.video_list = []
+        self.video_list_len = 0
         self.duration = 4   # Default interval between photos is 4 seconds
         self.size_max_x = self.winfo_screenwidth()  # Max photo width based on display dimensions
         self.size_max_y = self.winfo_screenheight() # Max photo height based on display dimensions
@@ -52,6 +56,7 @@ class MySlideShow(tk.Toplevel):
         self.image_save_path = '.'                  # directory path for saving selected photos
         self.scaled_w = None                        # for holding the width of the currently displayed image
         self.scaled_h = None                        # for holding the height of the currently displayed image
+        self.video_player_enable = False            # flag to indicate if the slideshow is in video mode
 
         # If present, read from configuration file
         if hasattr(config, 'duration'):
@@ -72,6 +77,8 @@ class MySlideShow(tk.Toplevel):
             self.montage_size = config.montage_size
         if hasattr(config, 'image_save_path'):
             self.image_save_path = config.image_save_path
+        if hasattr(config, 'video_player_enable'):
+            self.video_player_enable = config.video_player_enable
         if hasattr(config, 'topmost'):
             self.attributes('-topmost', config.topmost)
         else:
@@ -96,8 +103,11 @@ class MySlideShow(tk.Toplevel):
         self.bind("<Down>", self.down_arrow_pressed)                     # decrease the photo duration by 1 second on down arrow keypress
         self.bind("<F11>", self.f11_pressed)                             # toggle fullscreen mode on F11 keypress
 
-        self.getImages()
-        shuffle(self.imageList)     # randomize the image playlist
+        if self.video_player_enable:
+            self.getVideos()
+        else:
+            self.getImages()
+            shuffle(self.imageList)     # randomize the image playlist
 
         if self.montage_mode:
             self.startMontageSlideShow()
@@ -108,7 +118,7 @@ class MySlideShow(tk.Toplevel):
         # Get image directory from command line or use current directory
         if len(sys.argv) == 2:
             curr_dir = sys.argv[1]
-        elif hasattr(config, 'img_directory'):  # If present, ready the photo directory path from the config file
+        elif hasattr(config, 'img_directory'):  # If present, read the photo directory path from the config file
             curr_dir = config.img_directory
         else:
             curr_dir = '.'
@@ -123,12 +133,37 @@ class MySlideShow(tk.Toplevel):
         self.imageListLen = len(self.imageList)
         print("{0} images loaded".format(self.imageListLen))
 
-    def startSlideShow(self):
-        if not self.slideshow_paused:                           # check if the slideshow is currently puased
-            self.index_next_random_image()                      # going forward in random list, update the indexing variables
-            self.showImage(self.imageList[self.forward_index])  # get next photo from a random image and show it
+    def getVideos(self):
+        # Get image directory from command line or use current directory
+        if len(sys.argv) == 2:
+            curr_dir = sys.argv[1]
+        elif hasattr(config, 'img_directory'):  # If present, read the photo directory path from the config file
+            curr_dir = config.img_directory
+        else:
+            curr_dir = '.'
 
-        self._job = self.after(self.duration * 1000, self.startSlideShow)   # recursion - after the set duration, repeat
+        for root, dirs, files in os.walk(curr_dir):
+            for f in files:
+                if f.endswith(".mp4"):
+                    vid_path = os.path.join(root, f)
+                    self.video_list.append(vid_path)
+
+        # Retrieve and print the length of the video list
+        self.video_list_len = len(self.video_list)
+        print("{0} videos loaded".format(self.video_list_len))
+
+    def startSlideShow(self):
+        if not self.video_player_enable:
+            if not self.slideshow_paused:                           # check if the slideshow is currently puased
+                self.index_next_random_image()                      # going forward in random list, update the indexing variables
+                self.showImage(self.imageList[self.forward_index])  # get next photo from a random image and show it
+                self._job = self.after(self.duration * 1000, self.startSlideShow)   # recursion - after the set duration, repeat
+        else:
+            video = self.video_list[randrange(self.video_list_len)]  # Show a random video from the video list
+            print(video)                                             # print the path to the current video
+            video_player = player.Main(video)
+            video_player.run();
+            self.startSlideShow()
 
     def index_next_random_image(self):
         if self.forward_index < self.imageListLen - 1:  # check if the last image in the playlist was just displayed
