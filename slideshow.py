@@ -133,7 +133,7 @@ class MySlideShow(tk.Toplevel):
 
         # Retrieve and print the length of the image list
         self.imageListLen = len(self.imageList)
-        print("{0} images loaded".format(self.imageListLen))
+        print("{0} images loaded from '{1}'".format(self.imageListLen, curr_dir))
 
     def getVideos(self):
         # Get image directory from command line or use current directory
