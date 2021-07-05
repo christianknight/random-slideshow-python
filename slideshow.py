@@ -59,6 +59,7 @@ class MySlideShow(tk.Toplevel):
         self.scaled_w = None                        # for holding the width of the currently displayed image
         self.scaled_h = None                        # for holding the height of the currently displayed image
         self.video_player_enable = False            # flag to indicate if the slideshow is in video mode
+        self.random = True                          # flag to indicate whether to play the slideshow in random order or not
 
         # If present, read from configuration file
         if hasattr(config, 'duration'):
@@ -81,6 +82,8 @@ class MySlideShow(tk.Toplevel):
             self.image_save_path = config.image_save_path
         if hasattr(config, 'video_player_enable'):
             self.video_player_enable = config.video_player_enable
+        if hasattr(config, 'random'):
+            self.random = config.random
         if hasattr(config, 'topmost'):
             self.attributes('-topmost', config.topmost)
         else:
@@ -109,7 +112,8 @@ class MySlideShow(tk.Toplevel):
             self.getVideos()
         else:
             self.getImages()
-            shuffle(self.imageList)     # randomize the image playlist
+            if self.random:
+                shuffle(self.imageList)     # randomize the image playlist
 
         if self.montage_mode:
             self.startMontageSlideShow()
