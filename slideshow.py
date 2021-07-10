@@ -17,11 +17,6 @@ except:
 if hasattr(config, 'video_player_enable'):
     import player
 
-# Operating system check
-if sys.platform == "win32":
-    from win32api import ShowCursor
-    ShowCursor(False)   # Hide the mouse cursor
-
 class HiddenRoot(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
@@ -112,6 +107,8 @@ class MySlideShow(tk.Toplevel):
         self.bind("<Up>", self.up_arrow_pressed)                         # increase the photo duration by 1 second on up arrow keypress
         self.bind("<Down>", self.down_arrow_pressed)                     # decrease the photo duration by 1 second on down arrow keypress
         self.bind("<F11>", self.f11_pressed)                             # toggle fullscreen mode on F11 keypress
+
+        self.config(cursor="none")  # hide the mouse cursor
 
         if self.video_player_enable:
             self.getVideos()
