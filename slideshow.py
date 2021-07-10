@@ -17,6 +17,11 @@ except:
 if hasattr(config, 'video_player_enable'):
     import player
 
+# Operating system check
+if sys.platform == "win32":
+    from win32api import ShowCursor
+    ShowCursor(False)   # Hide the mouse cursor
+
 class HiddenRoot(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
