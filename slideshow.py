@@ -6,7 +6,6 @@ import sys
 import os
 from random import shuffle, randrange
 from shutil import copy
-from time import sleep
 
 try:
     import config
