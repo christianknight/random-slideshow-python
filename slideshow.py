@@ -8,7 +8,6 @@ from random import shuffle, randrange
 from montage import montage_build
 from shutil import copy
 from time import sleep
-import pyautogui
 
 try:
     import config
@@ -17,6 +16,9 @@ except:
 
 if hasattr(config, 'video_player_enable'):
     import player
+
+if not hasattr(config, 'mouse_nudge') or config.mouse_nudge == True:
+    import pyautogui
 
 class HiddenRoot(tk.Tk):
     def __init__(self):
