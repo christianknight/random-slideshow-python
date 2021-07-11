@@ -5,7 +5,6 @@ from PIL import Image, ImageTk
 import sys
 import os
 from random import shuffle, randrange
-from montage import montage_build
 from shutil import copy
 from time import sleep
 
@@ -13,6 +12,9 @@ try:
     import config
 except:
     config = None
+
+if hasattr(config, 'montage_mode') and config.montage_mode == True:
+    from montage import montage_build
 
 if hasattr(config, 'video_player_enable'):
     import player
