@@ -60,6 +60,7 @@ class MySlideShow(tk.Toplevel):
         self.scaled_h = None                        # for holding the height of the currently displayed image
         self.video_player_enable = False            # flag to indicate if the slideshow is in video mode
         self.random = True                          # flag to indicate whether to play the slideshow in random order or not
+        self.cursor_enable = False                  # flag to indicate whether the mouse cursor should be shown on top of the slideshow or not
 
         # If present, read from configuration file
         if hasattr(config, 'duration'):
@@ -84,6 +85,8 @@ class MySlideShow(tk.Toplevel):
             self.video_player_enable = config.video_player_enable
         if hasattr(config, 'random'):
             self.random = config.random
+        if hasattr(config, 'cursor_enable'):
+            self.cursor_enable = config.cursor_enable
         if hasattr(config, 'topmost'):
             self.attributes('-topmost', config.topmost)
         else:
@@ -108,7 +111,9 @@ class MySlideShow(tk.Toplevel):
         self.bind("<Down>", self.down_arrow_pressed)                     # decrease the photo duration by 1 second on down arrow keypress
         self.bind("<F11>", self.f11_pressed)                             # toggle fullscreen mode on F11 keypress
 
-        self.config(cursor="none")  # hide the mouse cursor
+        # Hide the mouse cursor (unless enabled by user config)
+        if not self.cursor_enable:
+            self.config(cursor="none")
 
         if self.video_player_enable:
             self.getVideos()

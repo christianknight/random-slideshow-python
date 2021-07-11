@@ -11,3 +11,4 @@
 # montage_size = 10		# number of photos to use in each montage when montage mode is activated
 # video_player_enable = True	# flag to indicate if the slideshow is in video mode
 # random = False        # flag to indicate whether to play the slideshow in random order or not
+# cursor_enable = True          # flag to indicate whether the mouse cursor should be shown on top of the slideshow or not
