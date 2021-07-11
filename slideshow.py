@@ -313,8 +313,8 @@ class MySlideShow(tk.Toplevel):
             self.wm_geometry("{}x{}+{}+{}".format(self.scaled_w,self.scaled_h, 0, 0))
 
     def do_mouse_nudge(self):
-        pyautogui.move(0, 1)     # move the mouse cursor up by 1 pixel
-        pyautogui.move(0, -1)    # move the mouse cursor down by 1 pixel
+        pyautogui.move(0, 1)     # move the mouse cursor down by 1 pixel
+        pyautogui.move(0, -1)    # move the mouse cursor up by 1 pixel
 
 slideShow = HiddenRoot()
 slideShow.mainloop()
