@@ -12,3 +12,4 @@
 # video_player_enable = True	# flag to indicate if the slideshow is in video mode
 # random = False        # flag to indicate whether to play the slideshow in random order or not
 # cursor_enable = True          # flag to indicate whether the mouse cursor should be shown on top of the slideshow or not
+# mouse_nudge = False           # flag to indicate whether to nudge the mouse cursor every time the slideshow advances (to keep the screensaver from activating)

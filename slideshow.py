@@ -8,6 +8,7 @@ from random import shuffle, randrange
 from montage import montage_build
 from shutil import copy
 from time import sleep
+import pyautogui
 
 try:
     import config
@@ -61,6 +62,7 @@ class MySlideShow(tk.Toplevel):
         self.video_player_enable = False            # flag to indicate if the slideshow is in video mode
         self.random = True                          # flag to indicate whether to play the slideshow in random order or not
         self.cursor_enable = False                  # flag to indicate whether the mouse cursor should be shown on top of the slideshow or not
+        self.mouse_nudge = True                     # flag to indicate whether to nudge the mouse cursor every time the slideshow advances (to keep the screensaver from activating)
 
         # If present, read from configuration file
         if hasattr(config, 'duration'):
@@ -87,6 +89,8 @@ class MySlideShow(tk.Toplevel):
             self.random = config.random
         if hasattr(config, 'cursor_enable'):
             self.cursor_enable = config.cursor_enable
+        if hasattr(config, 'mouse_nudge'):
+            self.mouse_nudge = config.mouse_nudge
         if hasattr(config, 'topmost'):
             self.attributes('-topmost', config.topmost)
         else:
@@ -170,6 +174,8 @@ class MySlideShow(tk.Toplevel):
             if not self.slideshow_paused:                           # check if the slideshow is currently puased
                 self.index_next_random_image()                      # going forward in random list, update the indexing variables
                 self.showImage(self.imageList[self.forward_index])  # get next photo from a random image and show it
+                if self.mouse_nudge:
+                    self.do_mouse_nudge()    # keep the screensaver from activating
                 self._job = self.after(self.duration * 1000, self.startSlideShow)   # recursion - after the set duration, repeat
         else:
             video = self.video_list[randrange(self.video_list_len)]  # Show a random video from the video list
@@ -303,6 +309,10 @@ class MySlideShow(tk.Toplevel):
             self.fullscreen = False
             self.configure(bg='black', width=self.scaled_w, height=self.scaled_h)
             self.wm_geometry("{}x{}+{}+{}".format(self.scaled_w,self.scaled_h, 0, 0))
+
+    def do_mouse_nudge(self):
+        pyautogui.move(0, 1)     # move the mouse cursor up by 1 pixel
+        pyautogui.move(0, -1)    # move the mouse cursor down by 1 pixel
 
 slideShow = HiddenRoot()
 slideShow.mainloop()
