@@ -102,6 +102,9 @@ class MySlideShow(tk.Toplevel):
         self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
         self.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(),0,0))
 
+        self.canvas = tk.Canvas(self, width=self.size_max_x, height=self.size_max_y)
+        self.canvas.pack(expand=True, fill="both")
+
         # Display as background image
         self.label = tk.Label(self)
         self.label.pack(side="top", fill="both", expand=True)
@@ -117,6 +120,17 @@ class MySlideShow(tk.Toplevel):
         self.bind("<Up>", self.up_arrow_pressed)                         # increase the photo duration by 1 second on up arrow keypress
         self.bind("<Down>", self.down_arrow_pressed)                     # decrease the photo duration by 1 second on down arrow keypress
         self.bind("<F11>", self.f11_pressed)                             # toggle fullscreen mode on F11 keypress
+
+        # Mouse movement
+        self.bind("<ButtonPress-1>", self.move_start)
+        self.bind("<B1-Motion>", self.move_move)
+        
+        # Linux scrolling
+        self.bind("<Button-4>", self.zoomerP)
+        self.bind("<Button-5>", self.zoomerM)
+        
+        # Windows scrolling
+        self.bind("<MouseWheel>", self.zoomer)
 
         # Hide the mouse cursor (unless enabled by user config)
         if not self.cursor_enable:
@@ -219,6 +233,7 @@ class MySlideShow(tk.Toplevel):
         # Create the new image 
         self.persistent_image = ImageTk.PhotoImage(image)
         self.label.configure(image=self.persistent_image, bg='black')
+        self.canvas.create_window(self.scaled_w, self.scaled_h, window=self.label)
 
     def startMontageSlideShow(self):
         # Get a list of filepaths to 5 random photos
@@ -316,6 +331,28 @@ class MySlideShow(tk.Toplevel):
     def do_mouse_nudge(self):
         pyautogui.move(0, 1)     # move the mouse cursor down by 1 pixel
         pyautogui.move(0, -1)    # move the mouse cursor up by 1 pixel
+
+    # Mouse move
+    def move_start(self, event):
+        self.canvas.scan_mark(event.x, event.y)
+    def move_move(self, event):
+        self.canvas.scan_dragto(event.x, event.y, gain=1)
+
+    # Windows zoom
+    def zoomer(self,event):
+        if (event.delta > 0):
+            self.canvas.scale("all", event.x, event.y, 1.1, 1.1)
+        elif (event.delta < 0):
+            self.canvas.scale("all", event.x, event.y, 0.9, 0.9)
+        self.canvas.configure(scrollregion = self.canvas.bbox("all"))
+
+    # Linux zoom
+    def zoomerP(self,event):
+        self.canvas.scale("all", event.x, event.y, 1.1, 1.1)
+        self.canvas.configure(scrollregion = self.canvas.bbox("all"))
+    def zoomerM(self,event):
+        self.canvas.scale("all", event.x, event.y, 0.9, 0.9)
+        self.canvas.configure(scrollregion = self.canvas.bbox("all"))
 
 slideShow = HiddenRoot()
 slideShow.mainloop()
