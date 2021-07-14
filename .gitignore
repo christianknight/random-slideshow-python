@@ -1,0 +1,7 @@
+# ingore python local cache files
+*.pyc
+
+# ignore image files
+*.jpg
+*.bmp
+*.png
