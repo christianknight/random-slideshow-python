@@ -36,8 +36,6 @@ class HiddenRoot(tk.Tk):
 class MySlideShow(tk.Toplevel):
     def __init__(self, *args, **kwargs):
         tk.Toplevel.__init__(self, *args, **kwargs)
-        # Remove window decorations
-        self.overrideredirect(True)
 
         # For storing job ID when running tk.after()
         self._job = None
@@ -66,6 +64,7 @@ class MySlideShow(tk.Toplevel):
         self.random = True                          # flag to indicate whether to play the slideshow in random order or not
         self.cursor_enable = False                  # flag to indicate whether the mouse cursor should be shown on top of the slideshow or not
         self.mouse_nudge = True                     # flag to indicate whether to nudge the mouse cursor every time the slideshow advances (to keep the screensaver from activating)
+        self.borderless = True                      # flag to set whether the slideshow should run in a borderless window
 
         # If present, read from configuration file
         if hasattr(config, 'duration'):
@@ -96,9 +95,12 @@ class MySlideShow(tk.Toplevel):
             self.mouse_nudge = config.mouse_nudge
         if hasattr(config, 'topmost'):
             self.attributes('-topmost', config.topmost)
+        if hasattr(config, 'borderless'):
+            self.borderless = config.borderless
         else:
             self.attributes('-topmost', 1)   # Force the slideshow to always be on top
 
+        self.overrideredirect(self.borderless)    # configure window decorations (borderless vs. windowed mode)
         self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
         self.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(),0,0))
 
