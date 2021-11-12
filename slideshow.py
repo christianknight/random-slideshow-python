@@ -53,7 +53,7 @@ class MySlideShow(tk.Toplevel):
         self.size_max_x = self.winfo_screenwidth()  # Max photo width based on display dimensions
         self.size_max_y = self.winfo_screenheight() # Max photo height based on display dimensions
         self.position_x = self.position_y = 0       # starting x-y position, in pixels, from which the image is displayed relative to the top-left corner of the display, (0, 0)
-        self.fullscreen = False                     # flag to indicate whether the slideshow should take up the full screen with black background
+        self.fullscreen = True                      # flag to indicate whether the slideshow should take up the full screen with black background
         self.montage_mode = False                   # flag to indicate if montage mode is activated (several tiled images)
         self.montage_size = 8                       # number of photos to use in each montage when montage mode is activated
         self.slideshow_paused = False               # flag to keep track of if the slideshow is paused from user input
