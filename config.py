@@ -1,6 +1,3 @@
-# config.py
-
-# ----- Settings -----
 # duration = 6
 # img_directory = '.'
 # image_save_path = '.'
