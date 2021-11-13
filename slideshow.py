@@ -97,7 +97,7 @@ class MySlideShow(tk.Toplevel):
         if hasattr(config, 'topmost'):
             self.attributes('-topmost', config.topmost)
         else:
-            self.attributes('-topmost', 1)   # Force the slideshow to always be on top
+            self.attributes('-topmost', True)   # Force the slideshow to always be on top
 
         self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
         self.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(),0,0))
