@@ -102,9 +102,9 @@ class MySlideShow(tk.Toplevel):
         self.wm_attributes('-type', 'splash')
 
         if self.fullscreen:
-            self.attributes('-fullscreen',True)
+            self.attributes('-fullscreen', True)
         else:
-            self.attributes('-fullscreen',False)
+            self.attributes('-fullscreen', False)
 
         # Display as background image
         self.label = tk.Label(self)
