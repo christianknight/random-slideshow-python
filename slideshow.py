@@ -101,6 +101,11 @@ class MySlideShow(tk.Toplevel):
         self.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(),0,0))
         self.wm_attributes('-type', 'splash')
 
+        if self.fullscreen:
+            self.attributes('-fullscreen',True)
+        else:
+            self.attributes('-fullscreen',False)
+
         # Display as background image
         self.label = tk.Label(self)
         self.label.pack(side="top", fill="both", expand=True)
@@ -307,11 +312,13 @@ class MySlideShow(tk.Toplevel):
             self.fullscreen = True
             self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
             self.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(), 0, 0))
+            self.attributes('-fullscreen', True)
         else:
             print("Leaving fullscreen mode")
             self.fullscreen = False
             self.configure(bg='black', width=self.scaled_w, height=self.scaled_h)
             self.wm_geometry("{}x{}+{}+{}".format(self.scaled_w,self.scaled_h, 0, 0))
+            self.attributes('-fullscreen', False)
 
     def do_mouse_nudge(self):
         pyautogui.move(0, 1)     # move the mouse cursor down by 1 pixel
