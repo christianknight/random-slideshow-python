@@ -95,9 +95,11 @@ class MySlideShow(tk.Toplevel):
         if hasattr(config, 'mouse_nudge'):
             self.mouse_nudge = config.mouse_nudge
         if hasattr(config, 'topmost'):
-            self.attributes('-topmost', config.topmost)
+            self.topmost = config.topmost
         else:
-            self.attributes('-topmost', True)   # Force the slideshow to always be on top
+            self.topmost = True
+
+        self.attributes('-topmost', self.topmost)
 
         self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
         self.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(),0,0))
@@ -117,6 +119,7 @@ class MySlideShow(tk.Toplevel):
         self.bind("<Up>", self.up_arrow_pressed)                         # increase the photo duration by 1 second on up arrow keypress
         self.bind("<Down>", self.down_arrow_pressed)                     # decrease the photo duration by 1 second on down arrow keypress
         self.bind("<F11>", self.f11_pressed)                             # toggle fullscreen mode on F11 keypress
+        self.bind("<MouseWheel>", self.scroll_wheel_activated)           # toggle topmost mode on scroll wheel movement
 
         # Hide the mouse cursor (unless enabled by user config)
         if not self.cursor_enable:
@@ -312,6 +315,16 @@ class MySlideShow(tk.Toplevel):
             self.fullscreen = False
             self.configure(bg='black', width=self.scaled_w, height=self.scaled_h)
             self.wm_geometry("{}x{}+{}+{}".format(self.scaled_w,self.scaled_h, 0, 0))
+
+    def scroll_wheel_activated(self, event):
+        if self.topmost == False:
+            print("Enabling topmost window mode")
+            self.topmost = True
+        else:
+            print("Disabling topmost window mode")
+            self.topmost = False
+
+        self.attributes('-topmost', self.topmost)
 
     def do_mouse_nudge(self):
         pyautogui.move(0, 1)     # move the mouse cursor down by 1 pixel
