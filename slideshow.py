@@ -66,6 +66,7 @@ class MySlideShow(tk.Toplevel):
         self.random = True                          # flag to indicate whether to play the slideshow in random order or not
         self.cursor_enable = False                  # flag to indicate whether the mouse cursor should be shown on top of the slideshow or not
         self.mouse_nudge = True                     # flag to indicate whether to nudge the mouse cursor every time the slideshow advances (to keep the screensaver from activating)
+        self.topmost = True                         # flag to indicate whether the slideshow is displayed on top of all other windows or not
 
         # If present, read from configuration file
         if hasattr(config, 'duration'):
@@ -96,8 +97,6 @@ class MySlideShow(tk.Toplevel):
             self.mouse_nudge = config.mouse_nudge
         if hasattr(config, 'topmost'):
             self.topmost = config.topmost
-        else:
-            self.topmost = True
 
         self.attributes('-topmost', self.topmost)
 
