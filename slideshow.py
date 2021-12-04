@@ -67,6 +67,7 @@ class MySlideShow(tk.Toplevel):
         self.cursor_enable = False                  # flag to indicate whether the mouse cursor should be shown on top of the slideshow or not
         self.mouse_nudge = True                     # flag to indicate whether to nudge the mouse cursor every time the slideshow advances (to keep the screensaver from activating)
         self.topmost = True                         # flag to indicate whether the slideshow is displayed on top of all other windows or not
+        self.exclusive_dir = False                  # flag to indicate whethher the subdirectories within the image directory should be searched for photos
 
         # If present, read from configuration file
         if hasattr(config, 'duration'):
@@ -95,6 +96,8 @@ class MySlideShow(tk.Toplevel):
             self.cursor_enable = config.cursor_enable
         if hasattr(config, 'mouse_nudge'):
             self.mouse_nudge = config.mouse_nudge
+        if hasattr(config, 'exclusive_dir'):
+            self.exclusive_dir = config.exclusive_dir
         if hasattr(config, 'topmost'):
             self.topmost = config.topmost
 
@@ -150,6 +153,8 @@ class MySlideShow(tk.Toplevel):
                 if f.endswith(".png") or f.endswith(".jpg"):
                     img_path = os.path.join(root, f)
                     self.imageList.append(img_path)
+            if self.exclusive_dir == True:
+                break
 
         # Retrieve and print the length of the image list
         self.imageListLen = len(self.imageList)

@@ -13,6 +13,7 @@
 # random = False
 # cursor_enable = True
 # mouse_nudge = False
+# exclusive_dir = True
 
 # ----- Description of settings -----
 # duration - time, in seconds, between image transitions. If no value is specified, the default duration is 4 seconds.
