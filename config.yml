@@ -1,0 +1,31 @@
+SETTINGS:
+  DURATION: 6
+  IMG_DIRECTORY: '.'
+  IMG_SAVE_PATH: '.'
+  TOPMOST: True
+  SIZE_MAX_X: 1920
+  SIZE_MAX_Y: 1080
+  POSITION_X: 0
+  POSITION_Y: 0
+  FULLSCREEN: True
+  MONTAGE_MODE: False
+  MONTAGE_SIZE: 10
+  RANDOM: True
+  CURSOR_ENABLE: False
+  MOUSE_NUDGE: True
+  EXCLUSIVE_DIR: False
+
+# ----- Description of settings -----
+# DURATION - time, in seconds, between image transitions. If no value is specified, the default duration is 4 seconds.
+# IMG_DIRECTORY - path to a folder containing image files (.jpg and .png only). If no path is specified, the default image directory is the present working directory.
+# IMG_SAVE_PATH - directory path for saving selected photos
+# TOPMOST - boolean flag to set whether the slideshow is displayed on top of all other windows or not
+# SIZE_MAX_X, SIZE_MAX_Y - maxiumum size, in pixels, to display the image at in the horizontal (x) or vertical (y) directions. If no values are specified, the default maximum values are determined by the current display resolution.
+# POSITION_X, POSITION_Y - starting position, in pixels, from which the image is displayed relative to the top-left corner of the display, (0, 0). If no values are specified, the default starting position is (0, 0).
+# FULLSCREEN - flag to indicate whether the slideshow should take up the full screen with black background
+# MONTAGE_MODE - flag to indicate if montage mode is activated (several tiled images)
+# MONTAGE_SIZE - number of photos to use in each montage when montage mode is activated
+# RANDOM - flag to indicate whether to play the slideshow in random order or not
+# CURSOR_ENABLE - flag to indicate whether the mouse cursor should be shown on top of the slideshow or not
+# MOUSE_NUDGE - flag to indicate whether to nudge the mouse cursor every time the slideshow advances (to keep the screensaver from activating)
+# EXCLUSIVE_DIR - flag to indicate whether to only search for images directly within the specified directory (i.e. don't include pictures from any subdirectories)
