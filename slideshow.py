@@ -95,12 +95,16 @@ class MySlideShow(tk.Toplevel):
 
         self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
         self.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(),0,0))
-        self.wm_attributes('-type', 'splash')
 
-        if self.fullscreen:
-            self.attributes('-fullscreen', True)
-        else:
-            self.attributes('-fullscreen', False)
+        # Remove window decorations (differently for Linux and Windows)
+        if sys.platform == "linux" or sys.platform == "linux2":
+            self.wm_attributes('-type', 'splash')
+            if self.fullscreen:
+                self.attributes('-fullscreen', True)
+            else:
+                self.attributes('-fullscreen', False)
+        elif sys.platform == "win32":
+            self.overrideredirect(True)
 
         # Display as background image
         self.label = tk.Label(self)
