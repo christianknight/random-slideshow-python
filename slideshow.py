@@ -129,25 +129,26 @@ class MySlideShow(tk.Toplevel):
             self.startSlideShow()
 
     def getImages(self):
-        # Get image directory from command line or use current directory
-        if len(sys.argv) == 2:
-            curr_dir = sys.argv[1]
+        # Get image path(s) from command line arguments or the config file - otherwise, use the present working directory
+        if len(sys.argv) > 1:
+            image_dirs = sys.argv[1:]
         elif hasattr(config, 'img_directory'):  # If present, read the photo directory path from the config file
-            curr_dir = config.img_directory
+            image_dirs = config.img_directory
         else:
-            curr_dir = '.'
+            image_dirs = '.'
 
-        for root, dirs, files in os.walk(curr_dir):
-            for f in files:
-                if f.endswith(".png") or f.endswith(".jpg"):
-                    img_path = os.path.join(root, f)
-                    self.imageList.append(img_path)
-            if self.exclusive_dir == True:
-                break
+        for curr_dir in image_dirs:
+            for root, dirs, files in os.walk(curr_dir):
+                for f in files:
+                    if f.endswith(".png") or f.endswith(".jpg"):
+                        img_path = os.path.join(root, f)
+                        self.imageList.append(img_path)
+                if self.exclusive_dir == True:
+                    break
 
         # Retrieve and print the length of the image list
         self.imageListLen = len(self.imageList)
-        print(f"{self.imageListLen} images loaded from '{curr_dir}'")
+        print(f"{self.imageListLen} images loaded from '{image_dirs}'")
 
     def startSlideShow(self):
         if not self.slideshow_paused:                           # check if the slideshow is currently puased
