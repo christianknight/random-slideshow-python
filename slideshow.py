@@ -33,8 +33,6 @@ class HiddenRoot(tk.Tk):
 class MySlideShow(tk.Toplevel):
     def __init__(self, *args, **kwargs):
         tk.Toplevel.__init__(self, *args, **kwargs)
-        # Remove window decorations
-        self.overrideredirect(True)
 
         # For storing job ID when running tk.after()
         self._job = None
@@ -98,9 +96,20 @@ class MySlideShow(tk.Toplevel):
         self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
         self.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(),0,0))
 
+        # Remove window decorations (differently for Linux and Windows)
+        if sys.platform == "linux" or sys.platform == "linux2":
+            self.wm_attributes('-type', 'splash')
+            if self.fullscreen:
+                self.attributes('-fullscreen', True)
+            else:
+                self.attributes('-fullscreen', False)
+        elif sys.platform == "win32":
+            self.overrideredirect(True)
+
         # Display as background image
         self.label = tk.Label(self)
         self.label.pack(side="top", fill="both", expand=True)
+        self.label.focus_force()
 
         # set key binding actions
         self.bind("<Button-3>", lambda e: quit())                        # terminate the slideshow on single right-click
@@ -278,11 +287,13 @@ class MySlideShow(tk.Toplevel):
             self.fullscreen = True
             self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
             self.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(), 0, 0))
+            self.attributes('-fullscreen', True)
         else:
             print("Leaving fullscreen mode")
             self.fullscreen = False
             self.configure(bg='black', width=self.scaled_w, height=self.scaled_h)
             self.wm_geometry("{}x{}+{}+{}".format(self.scaled_w,self.scaled_h, 0, 0))
+            self.attributes('-fullscreen', False)
 
     def scroll_wheel_activated(self, event):
         if self.topmost == False:
