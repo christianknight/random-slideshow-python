@@ -9,7 +9,6 @@
 # fullscreen = False
 # montage_mode = True
 # montage_size = 10
-# video_player_enable = True
 # random = False
 # cursor_enable = True
 # mouse_nudge = False
@@ -25,7 +24,6 @@
 # fullscreen - flag to indicate whether the slideshow should take up the full screen with black background
 # montage_mode - flag to indicate if montage mode is activated (several tiled images)
 # montage_size - number of photos to use in each montage when montage mode is activated
-# video_player_enable - flag to indicate if the slideshow is in video mode
 # random - flag to indicate whether to play the slideshow in random order or not
 # cursor_enable - flag to indicate whether the mouse cursor should be shown on top of the slideshow or not
 # mouse_nudge - flag to indicate whether to nudge the mouse cursor every time the slideshow advances (to keep the screensaver from activating)
