@@ -15,9 +15,6 @@ except:
 if hasattr(config, 'montage_mode') and config.montage_mode == True:
     from montage import montage_build
 
-if hasattr(config, 'video_player_enable'):
-    import player
-
 if not hasattr(config, 'mouse_nudge') or config.mouse_nudge == True:
     import pyautogui
 
@@ -45,8 +42,6 @@ class MySlideShow(tk.Toplevel):
         self.persistent_image = None
         self.imageList = []
         self.imageListLen = 0
-        self.video_list = []
-        self.video_list_len = 0
         self.duration = 4   # Default interval between photos is 4 seconds
         self.size_max_x = self.winfo_screenwidth()  # Max photo width based on display dimensions
         self.size_max_y = self.winfo_screenheight() # Max photo height based on display dimensions
@@ -60,7 +55,6 @@ class MySlideShow(tk.Toplevel):
         self.image_save_path = '.'                  # directory path for saving selected photos
         self.scaled_w = None                        # for holding the width of the currently displayed image
         self.scaled_h = None                        # for holding the height of the currently displayed image
-        self.video_player_enable = False            # flag to indicate if the slideshow is in video mode
         self.random = True                          # flag to indicate whether to play the slideshow in random order or not
         self.cursor_enable = False                  # flag to indicate whether the mouse cursor should be shown on top of the slideshow or not
         self.mouse_nudge = True                     # flag to indicate whether to nudge the mouse cursor every time the slideshow advances (to keep the screensaver from activating)
@@ -86,8 +80,6 @@ class MySlideShow(tk.Toplevel):
             self.montage_size = config.montage_size
         if hasattr(config, 'image_save_path'):
             self.image_save_path = config.image_save_path
-        if hasattr(config, 'video_player_enable'):
-            self.video_player_enable = config.video_player_enable
         if hasattr(config, 'random'):
             self.random = config.random
         if hasattr(config, 'cursor_enable'):
@@ -132,12 +124,9 @@ class MySlideShow(tk.Toplevel):
         if not self.cursor_enable:
             self.config(cursor="none")
 
-        if self.video_player_enable:
-            self.getVideos()
-        else:
-            self.getImages()
-            if self.random:
-                shuffle(self.imageList)     # randomize the image playlist
+        self.getImages()
+        if self.random:
+            shuffle(self.imageList)     # randomize the image playlist
 
         if self.montage_mode:
             self.startMontageSlideShow()
@@ -145,59 +134,34 @@ class MySlideShow(tk.Toplevel):
             self.startSlideShow()
 
     def getImages(self):
-        # Get image directory from command line or use current directory
-        if len(sys.argv) == 2:
-            curr_dir = sys.argv[1]
+        # Get image path(s) from command line arguments or the config file - otherwise, use the present working directory
+        if len(sys.argv) > 1:
+            image_dirs = sys.argv[1:]
         elif hasattr(config, 'img_directory'):  # If present, read the photo directory path from the config file
-            curr_dir = config.img_directory
+            image_dirs = config.img_directory
         else:
-            curr_dir = '.'
+            image_dirs = '.'
 
-        for root, dirs, files in os.walk(curr_dir):
-            for f in files:
-                if f.endswith(".png") or f.endswith(".jpg"):
-                    img_path = os.path.join(root, f)
-                    self.imageList.append(img_path)
-            if self.exclusive_dir == True:
-                break
+        for curr_dir in image_dirs:
+            for root, dirs, files in os.walk(curr_dir):
+                for f in files:
+                    if f.endswith(".png") or f.endswith(".jpg"):
+                        img_path = os.path.join(root, f)
+                        self.imageList.append(img_path)
+                if self.exclusive_dir == True:
+                    break
 
         # Retrieve and print the length of the image list
         self.imageListLen = len(self.imageList)
-        print("{0} images loaded from '{1}'".format(self.imageListLen, curr_dir))
-
-    def getVideos(self):
-        # Get image directory from command line or use current directory
-        if len(sys.argv) == 2:
-            curr_dir = sys.argv[1]
-        elif hasattr(config, 'img_directory'):  # If present, read the photo directory path from the config file
-            curr_dir = config.img_directory
-        else:
-            curr_dir = '.'
-
-        for root, dirs, files in os.walk(curr_dir):
-            for f in files:
-                if f.endswith(".mp4"):
-                    vid_path = os.path.join(root, f)
-                    self.video_list.append(vid_path)
-
-        # Retrieve and print the length of the video list
-        self.video_list_len = len(self.video_list)
-        print("{0} videos loaded".format(self.video_list_len))
+        print(f"{self.imageListLen} images loaded from '{image_dirs}'")
 
     def startSlideShow(self):
-        if not self.video_player_enable:
-            if not self.slideshow_paused:                           # check if the slideshow is currently puased
-                self.index_next_random_image()                      # going forward in random list, update the indexing variables
-                self.showImage(self.imageList[self.forward_index])  # get next photo from a random image and show it
-                if self.mouse_nudge:
-                    self.do_mouse_nudge()    # keep the screensaver from activating
-                self._job = self.after(self.duration * 1000, self.startSlideShow)   # recursion - after the set duration, repeat
-        else:
-            video = self.video_list[randrange(self.video_list_len)]  # Show a random video from the video list
-            print(video)                                             # print the path to the current video
-            video_player = player.Main(video)
-            video_player.run();
-            self.startSlideShow()
+        if not self.slideshow_paused:                           # check if the slideshow is currently puased
+            self.index_next_random_image()                      # going forward in random list, update the indexing variables
+            self.showImage(self.imageList[self.forward_index])  # get next photo from a random image and show it
+            if self.mouse_nudge:
+                self.do_mouse_nudge()    # keep the screensaver from activating
+            self._job = self.after(self.duration * 1000, self.startSlideShow)   # recursion - after the set duration, repeat
 
     def index_next_random_image(self):
         if self.forward_index < self.imageListLen - 1:  # check if the last image in the playlist was just displayed
@@ -215,9 +179,9 @@ class MySlideShow(tk.Toplevel):
         print(filename)
 
         img_w, img_h = image.size
-        # print("Image size (x, y) = ({0}, {1})".format(img_w, img_h))
+        # print(f"Image size (x, y) = ({img_w}, {img_h})")
         width, height = min(self.size_max_x, img_w), min(self.size_max_y, img_h)
-        # print("Scaled size (x, y) = ({0}, {1})".format(width, height))
+        # print(f"Scaled size (x, y) = ({width}, {height})")
         image.thumbnail((width, height), Image.ANTIALIAS)
 
         # Store the size of the image to be displayed
@@ -239,7 +203,7 @@ class MySlideShow(tk.Toplevel):
             random_file_paths.append(self.imageList[randrange(self.imageListLen)])
             print(random_file_paths[x])
 
-        print("Building montage from {0} images".format(self.montage_size))
+        print(f"Building montage from {self.montage_size} images")
         montage = montage_build(random_file_paths)
 
         img_w, img_h = montage.size
@@ -265,15 +229,15 @@ class MySlideShow(tk.Toplevel):
         global left_click_x, left_click_y
         left_click_x = event.x
         left_click_y = event.y
-        # print("Mouse left-click at ({0}, {1})".format(left_click_x, left_click_y))
+        # print(f"Mouse left-click at ({left_click_x}, {left_click_y})")
 
     def double_left_click(self, event):
         if self.reverse_index < self.forward_index:                                   # check if backtracking
             copy(self.imageList[self.reverse_index], self.image_save_path)     # copy the current file into the destination directory
-            print("{0} copied to {1}".format(self.imageList[self.reverse_index], self.image_save_path))
+            print(f"{self.imageList[self.reverse_index]} copied to {self.image_save_path}")
         else:
             copy(self.imageList[self.forward_index], self.image_save_path)     # copy the current file into the destination directory
-            print("{0} copied to {1}".format(self.imageList[self.forward_index], self.image_save_path))
+            print(f"{self.imageList[self.forward_index]} copied to {self.image_save_path}")
 
     def left_arrow_pressed(self, event):
         self.slideshow_cancel()      # kill the slideshow
@@ -299,11 +263,11 @@ class MySlideShow(tk.Toplevel):
 
     def up_arrow_pressed(self, event):
         self.duration += 1   # increase the photo duration by 1 second
-        print("Photo duration: {0} seconds".format(self.duration))
+        print(f"Photo duration: {self.duration} seconds")
 
     def down_arrow_pressed(self, event):
         self.duration -= 1   # decrease the photo duration by 1 second
-        print("Photo duration: {0} seconds".format(self.duration))
+        print(f"Photo duration: {self.duration} seconds")
 
     def spacebar_pressed(self, event):
         if self.slideshow_paused == False:
