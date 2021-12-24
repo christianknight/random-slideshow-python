@@ -8,10 +8,12 @@ from random import shuffle, randrange
 from shutil import copy
 import yaml
 
-try:
-    import config
-except:
-    config = None
+def read_yaml(file_path):
+    with open(file_path, "r") as f:
+        return yaml.safe_load(f)
+
+# Open YAML config file
+config = read_yaml("config.yml")
 
 if hasattr(config, 'montage_mode') and config.montage_mode == True:
     from montage import montage_build
