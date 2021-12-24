@@ -9,7 +9,7 @@ Required modules:
 
 On Ubuntu, install the following packages:
 - `sudo apt-get install python3-tk python3-pil python3-pil.imagetk`
-- `python3 -m pip install pyautogui python-xlib`
+- `python3 -m pip install pyautogui python-xlib pyyaml`
 
 Usage:
 - Windows - `python slideshow.py [img_directory]`

@@ -6,6 +6,7 @@ import sys
 import os
 from random import shuffle, randrange
 from shutil import copy
+import yaml
 
 try:
     import config
