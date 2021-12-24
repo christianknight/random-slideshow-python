@@ -158,7 +158,7 @@ class MySlideShow(tk.Toplevel):
 
         # Retrieve and print the length of the image list
         self.imageListLen = len(self.imageList)
-        print("{0} images loaded from '{1}'".format(self.imageListLen, curr_dir))
+        print(f"{self.imageListLen} images loaded from '{curr_dir}'")
 
     def getVideos(self):
         # Get image directory from command line or use current directory
@@ -177,7 +177,7 @@ class MySlideShow(tk.Toplevel):
 
         # Retrieve and print the length of the video list
         self.video_list_len = len(self.video_list)
-        print("{0} videos loaded".format(self.video_list_len))
+        print(f"{self.video_list_len} videos loaded from '{curr_dir}'")
 
     def startSlideShow(self):
         if not self.video_player_enable:
@@ -210,9 +210,9 @@ class MySlideShow(tk.Toplevel):
         print(filename)
 
         img_w, img_h = image.size
-        # print("Image size (x, y) = ({0}, {1})".format(img_w, img_h))
+        # print(f"Image size (x, y) = ({img_w}, {img_h})")
         width, height = min(self.size_max_x, img_w), min(self.size_max_y, img_h)
-        # print("Scaled size (x, y) = ({0}, {1})".format(width, height))
+        # print(f"Scaled size (x, y) = ({width}, {height})")
         image.thumbnail((width, height), Image.ANTIALIAS)
 
         # Store the size of the image to be displayed
@@ -234,7 +234,7 @@ class MySlideShow(tk.Toplevel):
             random_file_paths.append(self.imageList[randrange(self.imageListLen)])
             print(random_file_paths[x])
 
-        print("Building montage from {0} images".format(self.montage_size))
+        print(f"Building montage from {self.montage_size} images")
         montage = montage_build(random_file_paths)
 
         img_w, img_h = montage.size
@@ -260,15 +260,15 @@ class MySlideShow(tk.Toplevel):
         global left_click_x, left_click_y
         left_click_x = event.x
         left_click_y = event.y
-        # print("Mouse left-click at ({0}, {1})".format(left_click_x, left_click_y))
+        # print(f"Mouse left-click at ({left_click_x}, {left_click_y})")
 
     def double_left_click(self, event):
         if self.reverse_index < self.forward_index:                                   # check if backtracking
             copy(self.imageList[self.reverse_index], self.image_save_path)     # copy the current file into the destination directory
-            print("{0} copied to {1}".format(self.imageList[self.reverse_index], self.image_save_path))
+            print(f"{self.imageList[self.reverse_index]} copied to {self.image_save_path}")
         else:
             copy(self.imageList[self.forward_index], self.image_save_path)     # copy the current file into the destination directory
-            print("{0} copied to {1}".format(self.imageList[self.forward_index], self.image_save_path))
+            print(f"{self.imageList[self.forward_index]} copied to {self.image_save_path}")
 
     def left_arrow_pressed(self, event):
         self.slideshow_cancel()      # kill the slideshow
@@ -294,11 +294,11 @@ class MySlideShow(tk.Toplevel):
 
     def up_arrow_pressed(self, event):
         self.duration += 1   # increase the photo duration by 1 second
-        print("Photo duration: {0} seconds".format(self.duration))
+        print(f"Photo duration: {self.duration} seconds")
 
     def down_arrow_pressed(self, event):
         self.duration -= 1   # decrease the photo duration by 1 second
-        print("Photo duration: {0} seconds".format(self.duration))
+        print(f"Photo duration: {self.duration} seconds")
 
     def spacebar_pressed(self, event):
         if self.slideshow_paused == False:
