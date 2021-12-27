@@ -7,6 +7,8 @@ import os
 from random import shuffle, randrange
 from shutil import copy
 import yaml
+from montage import montage_build
+import pyautogui
 
 def read_yaml(file_path):
     with open(file_path, "r") as f:
@@ -14,12 +16,6 @@ def read_yaml(file_path):
 
 # Open YAML config file
 config = read_yaml("config.yml")
-
-if hasattr(config, 'montage_mode') and config.montage_mode == True:
-    from montage import montage_build
-
-if not hasattr(config, 'mouse_nudge') or config.mouse_nudge == True:
-    import pyautogui
 
 class HiddenRoot(tk.Tk):
     def __init__(self):
@@ -115,8 +111,8 @@ class MySlideShow(tk.Toplevel):
         # Get image path(s) from command line arguments or the config file - otherwise, use the present working directory
         if len(sys.argv) > 1:
             image_dirs = sys.argv[1:]
-        elif hasattr(config, 'img_directory'):  # If present, read the photo directory path from the config file
-            image_dirs = config.img_directory
+        elif "IMG_DIRECTORY" in config["SETTINGS"]:  # If present, read the photo directory path from the config file
+            image_dirs = config["SETTINGS"]["IMG_DIRECTORY"]
         else:
             image_dirs = '.'
 
