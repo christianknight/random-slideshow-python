@@ -9,13 +9,17 @@ from shutil import copy
 import yaml
 from montage import montage_build
 import pyautogui
+from pathlib import Path
+
+base_path = Path(__file__).parent
+config_file_path = (base_path / "config.yml").resolve()
 
 def read_yaml(file_path):
     with open(file_path, "r") as f:
         return yaml.safe_load(f)
 
 # Read YAML config file
-config = read_yaml("config.yml")
+config = read_yaml(config_file_path)
 
 class HiddenRoot(tk.Tk):
     def __init__(self):
