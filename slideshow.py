@@ -82,7 +82,8 @@ class MySlideShow(tk.Toplevel):
 
         # set key binding actions
         self.bind("<Button-3>", lambda e: quit())                        # terminate the slideshow on single right-click
-        self.bind("<Double-Button-1>", self.double_left_click)           # copy the current photo into the destination directory on double-click
+        self.bind("<Double-Button-1>", self.copy_image)                  # copy the current photo into the destination directory on left mouse double-click
+        self.bind("<Return>", self.copy_image)                           # copy the current photo into the destination directory on return (enter) keypress
         self.bind("<Escape>", lambda e: quit())                          # terminate the slideshow on escape keypress
         self.bind("<Button-1>", self.mouse_click_left)                   # capture the x-y mouse coordinates on single left-click
         self.bind("<Left>", self.left_arrow_pressed)                     # jump to the previous image on left-arrow keypress
@@ -213,7 +214,7 @@ class MySlideShow(tk.Toplevel):
         left_click_y = event.y
         # print(f"Mouse left-click at ({left_click_x}, {left_click_y})")
 
-    def double_left_click(self, event):
+    def copy_image(self, event):
         if self.reverse_index < self.forward_index:                                   # check if backtracking
             copy(self.imageList[self.reverse_index], self.image_save_path)     # copy the current file into the destination directory
             print(f"{self.imageList[self.reverse_index]} copied to \"{self.image_save_path}\"")
