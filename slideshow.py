@@ -33,14 +33,10 @@ class MySlideShow(tk.Toplevel):
     def __init__(self, *args, **kwargs):
         tk.Toplevel.__init__(self, *args, **kwargs)
 
-        # For storing job ID when running tk.after()
-        self._job = None
-
-        # Save reference to photo so that garbage collection
-        # Does not clear image variable in "show_image()"
-        self.persistent_image = None
-        self.imageList = []
-        self.imageListLen = 0
+        self._job = None                # For storing job ID when running tk.after()
+        self.persistent_image = None    # For saving reference to currently displayed image
+        self.imageList = []             # For holding the list of image names in the pool
+        self.imageListLen = 0           # The length of the image list
         self.duration = config["SETTINGS"]["DURATION"]
         self.size_max_x = self.winfo_screenwidth()  # Max photo width based on display dimensions
         self.size_max_y = self.winfo_screenheight() # Max photo height based on display dimensions
@@ -62,7 +58,6 @@ class MySlideShow(tk.Toplevel):
         self.exclusive_dir = config["SETTINGS"]["EXCLUSIVE_DIR"]
 
         self.attributes('-topmost', self.topmost)
-
         self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
         self.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(),0,0))
 
@@ -113,11 +108,20 @@ class MySlideShow(tk.Toplevel):
             image_dirs = sys.argv[1:]
         elif "IMG_DIRECTORY" in config["SETTINGS"]:  # If present, use the image directory path from the config file
             image_dirs = config["SETTINGS"]["IMG_DIRECTORY"]
-        else:
+        else:   # Use the present working directory if no other path is found
             image_dirs = '.'
 
-        for curr_dir in image_dirs:
-            for root, dirs, files in os.walk(curr_dir):
+        if isinstance(image_dirs, list):
+            for curr_dir in image_dirs:
+                for root, dirs, files in os.walk(curr_dir):
+                    for f in files:
+                        if f.endswith(".png") or f.endswith(".jpg"):
+                            img_path = os.path.join(root, f)
+                            self.imageList.append(img_path)
+                    if self.exclusive_dir == True:
+                        break
+        else:
+            for root, dirs, files in os.walk(image_dirs):
                 for f in files:
                     if f.endswith(".png") or f.endswith(".jpg"):
                         img_path = os.path.join(root, f)
@@ -127,7 +131,7 @@ class MySlideShow(tk.Toplevel):
 
         # Retrieve and print the length of the image list
         self.imageListLen = len(self.imageList)
-        print(f"{self.imageListLen} images loaded from '{image_dirs}'")
+        print(f"{self.imageListLen} images loaded from \"{image_dirs}\"")
 
     def startSlideShow(self):
         if not self.slideshow_paused:                           # check if the slideshow is currently puased
@@ -208,10 +212,10 @@ class MySlideShow(tk.Toplevel):
     def double_left_click(self, event):
         if self.reverse_index < self.forward_index:                                   # check if backtracking
             copy(self.imageList[self.reverse_index], self.image_save_path)     # copy the current file into the destination directory
-            print(f"{self.imageList[self.reverse_index]} copied to {self.image_save_path}")
+            print(f"{self.imageList[self.reverse_index]} copied to \"{self.image_save_path}\"")
         else:
             copy(self.imageList[self.forward_index], self.image_save_path)     # copy the current file into the destination directory
-            print(f"{self.imageList[self.forward_index]} copied to {self.image_save_path}")
+            print(f"{self.imageList[self.forward_index]} copied to \"{self.image_save_path}\"")
 
     def left_arrow_pressed(self, event):
         self.slideshow_cancel()      # kill the slideshow
