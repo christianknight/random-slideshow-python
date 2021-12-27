@@ -6,17 +6,16 @@ import sys
 import os
 from random import shuffle, randrange
 from shutil import copy
+import yaml
+from montage import montage_build
+import pyautogui
 
-try:
-    import config
-except:
-    config = None
+def read_yaml(file_path):
+    with open(file_path, "r") as f:
+        return yaml.safe_load(f)
 
-if hasattr(config, 'montage_mode') and config.montage_mode == True:
-    from montage import montage_build
-
-if not hasattr(config, 'mouse_nudge') or config.mouse_nudge == True:
-    import pyautogui
+# Read YAML config file
+config = read_yaml("config.yml")
 
 class HiddenRoot(tk.Tk):
     def __init__(self):
@@ -38,54 +37,25 @@ class MySlideShow(tk.Toplevel):
         self.persistent_image = None    # For saving reference to currently displayed image
         self.imageList = []             # For holding the list of image names in the pool
         self.imageListLen = 0           # The length of the image list
-        self.duration = 4   # Default interval between photos is 4 seconds
+        self.duration = config["SETTINGS"]["DURATION"]
         self.size_max_x = self.winfo_screenwidth()  # Max photo width based on display dimensions
         self.size_max_y = self.winfo_screenheight() # Max photo height based on display dimensions
-        self.position_x = self.position_y = 0       # starting x-y position, in pixels, from which the image is displayed relative to the top-left corner of the display, (0, 0)
-        self.fullscreen = True                      # flag to indicate whether the slideshow should take up the full screen with black background
-        self.montage_mode = False                   # flag to indicate if montage mode is activated (several tiled images)
-        self.montage_size = 8                       # number of photos to use in each montage when montage mode is activated
+        self.position_x = config["SETTINGS"]["POSITION_X"]
+        self.position_y = config["SETTINGS"]["POSITION_Y"]
+        self.fullscreen = config["SETTINGS"]["FULLSCREEN"]
+        self.montage_mode = config["SETTINGS"]["MONTAGE_MODE"]
+        self.montage_size = config["SETTINGS"]["MONTAGE_SIZE"]
         self.slideshow_paused = False               # flag to keep track of if the slideshow is paused from user input
         self.forward_index = -1                     # index for tracking position in playlist in order to show consecutive random images
         self.reverse_index = -1                     # index for tracking position in playlist in order to show the previously displayed images
-        self.image_save_path = '.'                  # directory path for saving selected photos
+        self.image_save_path = config["SETTINGS"]["IMG_SAVE_PATH"]
         self.scaled_w = None                        # for holding the width of the currently displayed image
         self.scaled_h = None                        # for holding the height of the currently displayed image
-        self.random = True                          # flag to indicate whether to play the slideshow in random order or not
-        self.cursor_enable = False                  # flag to indicate whether the mouse cursor should be shown on top of the slideshow or not
-        self.mouse_nudge = True                     # flag to indicate whether to nudge the mouse cursor every time the slideshow advances (to keep the screensaver from activating)
-        self.topmost = True                         # flag to indicate whether the slideshow is displayed on top of all other windows or not
-        self.exclusive_dir = False                  # flag to indicate whethher the subdirectories within the image directory should be searched for photos
-
-        # If present, read from configuration file
-        if hasattr(config, 'duration'):
-            self.duration = config.duration
-        if hasattr(config, 'size_max_x'):
-            self.size_max_x = config.size_max_x
-        if hasattr(config, 'size_max_y'):
-            self.size_max_y = config.size_max_y
-        if hasattr(config, 'position_x'):
-            self.position_x = config.position_x
-        if hasattr(config, 'position_y'):
-            self.position_y = config.position_y
-        if hasattr(config, 'fullscreen'):
-            self.fullscreen = config.fullscreen
-        if hasattr(config, 'montage_mode'):
-            self.montage_mode = config.montage_mode
-        if hasattr(config, 'montage_size'):
-            self.montage_size = config.montage_size
-        if hasattr(config, 'image_save_path'):
-            self.image_save_path = config.image_save_path
-        if hasattr(config, 'random'):
-            self.random = config.random
-        if hasattr(config, 'cursor_enable'):
-            self.cursor_enable = config.cursor_enable
-        if hasattr(config, 'mouse_nudge'):
-            self.mouse_nudge = config.mouse_nudge
-        if hasattr(config, 'exclusive_dir'):
-            self.exclusive_dir = config.exclusive_dir
-        if hasattr(config, 'topmost'):
-            self.topmost = config.topmost
+        self.random = config["SETTINGS"]["RANDOM"]
+        self.cursor_enable = config["SETTINGS"]["CURSOR_ENABLE"]
+        self.mouse_nudge = config["SETTINGS"]["MOUSE_NUDGE"]
+        self.topmost = config["SETTINGS"]["TOPMOST"]
+        self.exclusive_dir = config["SETTINGS"]["EXCLUSIVE_DIR"]
 
         self.attributes('-topmost', self.topmost)
         self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
@@ -136,8 +106,8 @@ class MySlideShow(tk.Toplevel):
         # Get image path(s) from command line arguments or the config file - otherwise, use the present working directory
         if len(sys.argv) > 1:
             image_dirs = sys.argv[1:]
-        elif hasattr(config, 'img_directory'):  # If present, read the photo directory path from the config file
-            image_dirs = config.img_directory
+        elif "IMG_DIRECTORY" in config["SETTINGS"]:  # If present, use the image directory path from the config file
+            image_dirs = config["SETTINGS"]["IMG_DIRECTORY"]
         else:   # Use the present working directory if no other path is found
             image_dirs = '.'
 
