@@ -34,14 +34,10 @@ class MySlideShow(tk.Toplevel):
     def __init__(self, *args, **kwargs):
         tk.Toplevel.__init__(self, *args, **kwargs)
 
-        # For storing job ID when running tk.after()
-        self._job = None
-
-        # Save reference to photo so that garbage collection
-        # Does not clear image variable in "show_image()"
-        self.persistent_image = None
-        self.imageList = []
-        self.imageListLen = 0
+        self._job = None                # For storing job ID when running tk.after()
+        self.persistent_image = None    # For saving reference to currently displayed image
+        self.imageList = []             # For holding the list of image names in the pool
+        self.imageListLen = 0           # The length of the image list
         self.duration = 4   # Default interval between photos is 4 seconds
         self.size_max_x = self.winfo_screenwidth()  # Max photo width based on display dimensions
         self.size_max_y = self.winfo_screenheight() # Max photo height based on display dimensions
@@ -92,7 +88,6 @@ class MySlideShow(tk.Toplevel):
             self.topmost = config.topmost
 
         self.attributes('-topmost', self.topmost)
-
         self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
         self.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(),0,0))
 
@@ -143,7 +138,7 @@ class MySlideShow(tk.Toplevel):
             image_dirs = sys.argv[1:]
         elif hasattr(config, 'img_directory'):  # If present, read the photo directory path from the config file
             image_dirs = config.img_directory
-        else:
+        else:   # Use the present working directory if no other path is found
             image_dirs = '.'
 
         for curr_dir in image_dirs:
