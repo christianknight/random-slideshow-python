@@ -161,7 +161,7 @@ class MySlideShow(tk.Toplevel):
 
         # Retrieve and print the length of the image list
         self.imageListLen = len(self.imageList)
-        print(f"{self.imageListLen} images loaded from '{image_dirs}'")
+        print(f"{self.imageListLen} images loaded from \"{image_dirs}\"")
 
     def startSlideShow(self):
         if not self.slideshow_paused:                           # check if the slideshow is currently puased
