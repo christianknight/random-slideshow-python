@@ -233,10 +233,10 @@ class MySlideShow(tk.Toplevel):
     def double_left_click(self, event):
         if self.reverse_index < self.forward_index:                                   # check if backtracking
             copy(self.imageList[self.reverse_index], self.image_save_path)     # copy the current file into the destination directory
-            print(f"{self.imageList[self.reverse_index]} copied to {self.image_save_path}")
+            print(f"{self.imageList[self.reverse_index]} copied to \"{self.image_save_path}\"")
         else:
             copy(self.imageList[self.forward_index], self.image_save_path)     # copy the current file into the destination directory
-            print(f"{self.imageList[self.forward_index]} copied to {self.image_save_path}")
+            print(f"{self.imageList[self.forward_index]} copied to \"{self.image_save_path}\"")
 
     def left_arrow_pressed(self, event):
         self.slideshow_cancel()      # kill the slideshow
