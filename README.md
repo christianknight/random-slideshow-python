@@ -6,9 +6,10 @@ Required modules:
 - `Pillow`
 - `image`
 - `pyautogui`
+- `pyyaml`
 
 On Windows, run the following command:
-- `pip install Pillow pyautogui`
+- `pip install Pillow pyautogui pyyaml`
 
 On Ubuntu, install the following packages:
 - `sudo apt-get install python3-tk python3-pil python3-pil.imagetk`
