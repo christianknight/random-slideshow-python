@@ -14,6 +14,19 @@ def read_yaml(file_path):
 
 # Open YAML config file
 config = read_yaml("config.yml")
+print("Duration: {0}".format(config["SETTINGS"]["DURATION"]))
+print("Image directory: '{0}'".format(config["SETTINGS"]["IMG_DIRECTORY"]))
+print("Image save path: '{0}'".format(config["SETTINGS"]["IMG_SAVE_PATH"]))
+print("Topmost: {0}".format(config["SETTINGS"]["TOPMOST"]))
+print("Max. size (X, Y): {0}, {1}".format(config["SETTINGS"]["SIZE_MAX_X"], config["SETTINGS"]["SIZE_MAX_Y"]))
+print("Position (X, Y): {0}".format(config["SETTINGS"]["POSITION_X"], config["SETTINGS"]["POSITION_Y"]))
+print("Fullscreen: {0}".format(config["SETTINGS"]["FULLSCREEN"]))
+print("Montage mode: {0}".format(config["SETTINGS"]["MONTAGE_MODE"]))
+print("Montage size: {0}".format(config["SETTINGS"]["MONTAGE_SIZE"]))
+print("Random: {0}".format(config["SETTINGS"]["RANDOM"]))
+print("Cursor enable: {0}".format(config["SETTINGS"]["CURSOR_ENABLE"]))
+print("Mouse nudge: {0}".format(config["SETTINGS"]["MOUSE_NUDGE"]))
+print("Exclusive directory: {0}".format(config["SETTINGS"]["EXCLUSIVE_DIR"]))
 
 if hasattr(config, 'montage_mode') and config.montage_mode == True:
     from montage import montage_build
