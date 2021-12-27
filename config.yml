@@ -16,16 +16,16 @@ SETTINGS:
   EXCLUSIVE_DIR: False
 
 # ----- Description of settings -----
-# DURATION - time, in seconds, between image transitions. If no value is specified, the default duration is 4 seconds.
-# IMG_DIRECTORY - path to a folder containing image files (.jpg and .png only). If no path is specified, the default image directory is the present working directory.
-# IMG_SAVE_PATH - directory path for saving selected photos
-# TOPMOST - boolean flag to set whether the slideshow is displayed on top of all other windows or not
-# SIZE_MAX_X, SIZE_MAX_Y - maxiumum size, in pixels, to display the image at in the horizontal (x) or vertical (y) directions. If no values are specified, the default maximum values are determined by the current display resolution.
-# POSITION_X, POSITION_Y - starting position, in pixels, from which the image is displayed relative to the top-left corner of the display, (0, 0). If no values are specified, the default starting position is (0, 0).
-# FULLSCREEN - flag to indicate whether the slideshow should take up the full screen with black background
-# MONTAGE_MODE - flag to indicate if montage mode is activated (several tiled images)
-# MONTAGE_SIZE - number of photos to use in each montage when montage mode is activated
-# RANDOM - flag to indicate whether to play the slideshow in random order or not
-# CURSOR_ENABLE - flag to indicate whether the mouse cursor should be shown on top of the slideshow or not
-# MOUSE_NUDGE - flag to indicate whether to nudge the mouse cursor every time the slideshow advances (to keep the screensaver from activating)
-# EXCLUSIVE_DIR - flag to indicate whether to only search for images directly within the specified directory (i.e. don't include pictures from any subdirectories)
+# DURATION - Time interval, in seconds, between image transitions. Required.
+# IMG_DIRECTORY - Path to a folder containing image files (.jpg and .png only). By default, images are loaded from the present working directory. Optional.
+# IMG_SAVE_PATH - Directory path for saving selected photos. Required.
+# TOPMOST - Boolean flag to set whether the slideshow is displayed on top of all other windows or not. Required.
+# SIZE_MAX_X, SIZE_MAX_Y - Maxiumum size, in pixels, to display the image at in the horizontal (x) or vertical (y) directions. If no values are specified, the default maximum values are determined by the current display resolution. Optional.
+# POSITION_X, POSITION_Y - Starting position, in pixels, from which the image is displayed relative to the top-left corner of the display, (0, 0). Required.
+# FULLSCREEN - Flag to indicate whether the slideshow should take up the full screen with black background. Required.
+# MONTAGE_MODE - Flag to indicate if montage mode is activated (several tiled images). Required.
+# MONTAGE_SIZE - Number of photos to use in each montage when montage mode is activated. Required.
+# RANDOM - Flag to indicate whether to play the slideshow in random order or not. Required.
+# CURSOR_ENABLE - Flag to indicate whether the mouse cursor should be shown on top of the slideshow or not. Required.
+# MOUSE_NUDGE - Flag to indicate whether to nudge the mouse cursor every time the slideshow advances (to keep the screensaver from activating). Required.
+# EXCLUSIVE_DIR - Flag to indicate whether to only search for images directly within the specified directory (i.e. don't include pictures from any subdirectories). Required.
