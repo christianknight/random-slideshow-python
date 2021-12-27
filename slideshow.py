@@ -14,7 +14,7 @@ def read_yaml(file_path):
     with open(file_path, "r") as f:
         return yaml.safe_load(f)
 
-# Open YAML config file
+# Read YAML config file
 config = read_yaml("config.yml")
 
 class HiddenRoot(tk.Tk):
@@ -111,7 +111,7 @@ class MySlideShow(tk.Toplevel):
         # Get image path(s) from command line arguments or the config file - otherwise, use the present working directory
         if len(sys.argv) > 1:
             image_dirs = sys.argv[1:]
-        elif "IMG_DIRECTORY" in config["SETTINGS"]:  # If present, read the photo directory path from the config file
+        elif "IMG_DIRECTORY" in config["SETTINGS"]:  # If present, use the image directory path from the config file
             image_dirs = config["SETTINGS"]["IMG_DIRECTORY"]
         else:
             image_dirs = '.'
