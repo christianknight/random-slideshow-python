@@ -141,8 +141,17 @@ class MySlideShow(tk.Toplevel):
         else:   # Use the present working directory if no other path is found
             image_dirs = '.'
 
-        for curr_dir in image_dirs:
-            for root, dirs, files in os.walk(curr_dir):
+        if isinstance(image_dirs, list):
+            for curr_dir in image_dirs:
+                for root, dirs, files in os.walk(curr_dir):
+                    for f in files:
+                        if f.endswith(".png") or f.endswith(".jpg"):
+                            img_path = os.path.join(root, f)
+                            self.imageList.append(img_path)
+                    if self.exclusive_dir == True:
+                        break
+        else:
+            for root, dirs, files in os.walk(image_dirs):
                 for f in files:
                     if f.endswith(".png") or f.endswith(".jpg"):
                         img_path = os.path.join(root, f)
