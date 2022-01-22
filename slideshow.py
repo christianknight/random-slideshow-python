@@ -9,6 +9,7 @@ from shutil import copy
 import yaml
 from pathlib import Path
 import logging
+import argparse
 
 base_path = Path(__file__).parent
 config_file_path = (base_path / "config.yml").resolve()
@@ -19,6 +20,32 @@ def read_yaml(file_path):
 
 # Read YAML config file
 config = read_yaml(config_file_path)
+
+# Parse command line arguments
+parser = argparse.ArgumentParser()
+
+parser.add_argument("-p", "--path", help="Path to image files")
+
+parser.add_argument('--fullscreen', dest='fullscreen', help="Display image in fullscreen mode", action='store_true')
+parser.add_argument('--no-fullscreen', dest='fullscreen', help="Don't show image in fullscreen mode", action='store_false')
+
+parser.add_argument("--topmost", dest='topmost', help="Don't allow other windows on top of image", action='store_true')
+parser.add_argument("--no-topmost", dest='topmost', help="Allow other windows on top of image", action='store_false')
+
+parser.add_argument("--random", dest='random', help="Randomize order of images", action='store_true')
+parser.add_argument("--no-random", dest='random', help="Don't randomize order of images", action='store_false')
+
+parser.add_argument("--cursor", dest='cursor', help="Show mouse cursor", action='store_true')
+parser.add_argument("--no-cursor", dest='cursor', help="Hide mouse cursor", action='store_false')
+
+args = parser.parse_args()
+print("Path={}, Fullscreen={}, Topmost={}, Random={}".format(
+    args.path,
+    args.fullscreen,
+    args.topmost,
+    args.random,
+    args.cursor
+))
 
 class HiddenRoot(tk.Tk):
     def __init__(self):
