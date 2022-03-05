@@ -7,7 +7,6 @@ import os
 from random import shuffle, randrange
 from shutil import copy
 import yaml
-from montage import montage_build
 import pyautogui
 from pathlib import Path
 
@@ -47,8 +46,6 @@ class MySlideShow(tk.Toplevel):
         self.position_x = config["SETTINGS"]["POSITION_X"]
         self.position_y = config["SETTINGS"]["POSITION_Y"]
         self.fullscreen = config["SETTINGS"]["FULLSCREEN"]
-        self.montage_mode = config["SETTINGS"]["MONTAGE_MODE"]
-        self.montage_size = config["SETTINGS"]["MONTAGE_SIZE"]
         self.slideshow_paused = False               # flag to keep track of if the slideshow is paused from user input
         self.forward_index = -1                     # index for tracking position in playlist in order to show consecutive random images
         self.reverse_index = -1                     # index for tracking position in playlist in order to show the previously displayed images
@@ -102,10 +99,7 @@ class MySlideShow(tk.Toplevel):
         if self.random:
             shuffle(self.imageList)     # randomize the image playlist
 
-        if self.montage_mode:
-            self.startMontageSlideShow()
-        else:
-            self.startSlideShow()
+        self.startSlideShow()
 
     def getImages(self):
         # Get image path(s) from command line arguments or the config file - otherwise, use the present working directory
@@ -178,30 +172,6 @@ class MySlideShow(tk.Toplevel):
         # Create the new image 
         self.persistent_image = ImageTk.PhotoImage(image)
         self.label.configure(image=self.persistent_image, bg='black')
-
-    def startMontageSlideShow(self):
-        # Get a list of filepaths to 5 random photos
-        random_file_paths = []
-        for x in range(self.montage_size):
-            random_file_paths.append(self.imageList[randrange(self.imageListLen)])
-            print(random_file_paths[x])
-
-        print(f"Building montage from {self.montage_size} images")
-        montage = montage_build(random_file_paths)
-
-        img_w, img_h = montage.size
-        width, height = min(self.size_max_x, img_w), min(self.size_max_y, img_h)
-        montage.thumbnail((width, height), Image.ANTIALIAS)
-
-        if not self.fullscreen:
-            scaled_w, scaled_h = montage.size
-            self.wm_geometry("{}x{}+{}+{}".format(scaled_w,scaled_h,self.position_x,self.position_y))
-        
-        # Create the new image 
-        self.persistent_image = ImageTk.PhotoImage(montage)
-        self.label.configure(image=self.persistent_image, bg='black')
-
-        self._job = self.after(self.duration * 1000, self.startMontageSlideShow)
 
     def slideshow_cancel(self):
         if self._job is not None:
