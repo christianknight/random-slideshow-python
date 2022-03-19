@@ -9,6 +9,7 @@ from shutil import copy
 import yaml
 import pyautogui
 from pathlib import Path
+import logging
 
 base_path = Path(__file__).parent
 config_file_path = (base_path / "config.yml").resolve()
@@ -150,7 +151,11 @@ class MySlideShow(tk.Toplevel):
         self.reverse_index = self.forward_index     # reset the reverse index (no longer back-tracking)
 
     def showImage(self, filename):
-        image = Image.open(filename)
+        try:
+            image = Image.open(filename)
+        except Exception:
+            logging.exception(f"Error occurred while opening {filename}")
+            return
 
         # Print photo details to output
         print(filename)
