@@ -115,7 +115,7 @@ class MySlideShow(tk.Toplevel):
             for curr_dir in image_dirs:
                 for root, dirs, files in os.walk(curr_dir):
                     for f in files:
-                        if f.endswith(".png") or f.endswith(".jpg"):
+                        if f.lower().endswith(".png") or f.lower().endswith(".jpg"):
                             img_path = os.path.join(root, f)
                             self.imageList.append(img_path)
                     if self.exclusive_dir == True:
@@ -123,7 +123,7 @@ class MySlideShow(tk.Toplevel):
         else:
             for root, dirs, files in os.walk(image_dirs):
                 for f in files:
-                    if f.endswith(".png") or f.endswith(".jpg"):
+                    if f.lower().endswith(".png") or f.lower().endswith(".jpg"):
                         img_path = os.path.join(root, f)
                         self.imageList.append(img_path)
                 if self.exclusive_dir == True:
