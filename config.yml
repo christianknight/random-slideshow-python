@@ -11,7 +11,6 @@ SETTINGS:
   RANDOM: True
   CURSOR_ENABLE: False
   MOUSE_NUDGE: True
-  EXCLUSIVE_DIR: False
 
 # ----- Description of settings -----
 # DURATION - Time interval, in seconds, between image transitions. Required.
@@ -28,4 +27,3 @@ SETTINGS:
 # RANDOM - Flag to indicate whether to play the slideshow in random order or not. Required.
 # CURSOR_ENABLE - Flag to indicate whether the mouse cursor should be shown on top of the slideshow or not. Required.
 # MOUSE_NUDGE - Flag to indicate whether to nudge the mouse cursor every time the slideshow advances (to keep the screensaver from activating). Required.
-# EXCLUSIVE_DIR - Flag to indicate whether to only search for images directly within the specified directory (i.e. don't include pictures from any subdirectories). Required.

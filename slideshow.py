@@ -57,7 +57,6 @@ class MySlideShow(tk.Toplevel):
         self.cursor_enable = config["SETTINGS"]["CURSOR_ENABLE"]
         self.mouse_nudge = config["SETTINGS"]["MOUSE_NUDGE"]
         self.topmost = config["SETTINGS"]["TOPMOST"]
-        self.exclusive_dir = config["SETTINGS"]["EXCLUSIVE_DIR"]
 
         self.attributes('-topmost', self.topmost)
         self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
@@ -118,16 +117,12 @@ class MySlideShow(tk.Toplevel):
                         if f.lower().endswith(".png") or f.lower().endswith(".jpg"):
                             img_path = os.path.join(root, f)
                             self.imageList.append(img_path)
-                    if self.exclusive_dir == True:
-                        break
         else:
             for root, dirs, files in os.walk(image_dirs):
                 for f in files:
                     if f.lower().endswith(".png") or f.lower().endswith(".jpg"):
                         img_path = os.path.join(root, f)
                         self.imageList.append(img_path)
-                if self.exclusive_dir == True:
-                    break
 
         # Retrieve and print the length of the image list
         self.imageListLen = len(self.imageList)
