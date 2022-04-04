@@ -54,8 +54,6 @@ class MySlideShow(tk.Toplevel):
         self.scaled_w = None                        # for holding the width of the currently displayed image
         self.scaled_h = None                        # for holding the height of the currently displayed image
         self.random = config["SETTINGS"]["RANDOM"]
-        self.cursor_enable = config["SETTINGS"]["CURSOR_ENABLE"]
-        self.mouse_nudge = config["SETTINGS"]["MOUSE_NUDGE"]
         self.topmost = config["SETTINGS"]["TOPMOST"]
 
         self.attributes('-topmost', self.topmost)
@@ -91,9 +89,8 @@ class MySlideShow(tk.Toplevel):
         self.bind("<F11>", self.f11_pressed)                             # toggle fullscreen mode on F11 keypress
         self.bind("<MouseWheel>", self.scroll_wheel_activated)           # toggle topmost mode on scroll wheel movement
 
-        # Hide the mouse cursor (unless enabled by user config)
-        if not self.cursor_enable:
-            self.config(cursor="none")
+        # Hide the mouse cursor
+        self.config(cursor="none")
 
         self.getImages()
         if self.random:
@@ -132,8 +129,7 @@ class MySlideShow(tk.Toplevel):
         if not self.slideshow_paused:                           # check if the slideshow is currently puased
             self.index_next_random_image()                      # going forward in random list, update the indexing variables
             self.showImage(self.imageList[self.forward_index])  # get next photo from a random image and show it
-            if self.mouse_nudge:
-                self.do_mouse_nudge()    # keep the screensaver from activating
+            self.do_mouse_nudge()    # keep the screensaver from activating
             self._job = self.after(self.duration * 1000, self.startSlideShow)   # recursion - after the set duration, repeat
 
     def index_next_random_image(self):

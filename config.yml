@@ -9,8 +9,6 @@ SETTINGS:
   POSITION_Y: 0
   FULLSCREEN: True
   RANDOM: True
-  CURSOR_ENABLE: False
-  MOUSE_NUDGE: True
 
 # ----- Description of settings -----
 # DURATION - Time interval, in seconds, between image transitions. Required.
@@ -25,5 +23,3 @@ SETTINGS:
 # POSITION_X, POSITION_Y - Starting position, in pixels, from which the image is displayed relative to the top-left corner of the display, (0, 0). Required.
 # FULLSCREEN - Flag to indicate whether the slideshow should take up the full screen with black background. Required.
 # RANDOM - Flag to indicate whether to play the slideshow in random order or not. Required.
-# CURSOR_ENABLE - Flag to indicate whether the mouse cursor should be shown on top of the slideshow or not. Required.
-# MOUSE_NUDGE - Flag to indicate whether to nudge the mouse cursor every time the slideshow advances (to keep the screensaver from activating). Required.
