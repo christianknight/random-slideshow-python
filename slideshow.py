@@ -10,7 +10,6 @@ import yaml
 import pyautogui
 from pathlib import Path
 import logging
-from time import sleep
 
 base_path = Path(__file__).parent
 config_file_path = (base_path / "config.yml").resolve()
@@ -132,7 +131,6 @@ class MySlideShow(tk.Toplevel):
             self.index_next_random_image()                      # going forward in random list, update the indexing variables
             self.showImage(self.imageList[self.forward_index])  # get next photo from a random image and show it
             self.do_mouse_nudge()    # keep the screensaver from activating
-            sleep(0.05)                                         # 50ms input delay
             self._job = self.after(self.duration * 1000, self.startSlideShow)   # recursion - after the set duration, repeat
 
     def index_next_random_image(self):
