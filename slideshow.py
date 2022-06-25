@@ -220,12 +220,14 @@ class MySlideShow(tk.Toplevel):
         print(f"Photo duration: {self.duration} seconds")
 
     def spacebar_pressed(self, event):
+        self.slideshow_cancel()
         if self.slideshow_paused == False:
             print("Slideshow paused, press space to resume")
             self.slideshow_paused = True
         else:
             print("Resuming slideshow")
             self.slideshow_paused = False
+            self._job = self.after(0, self.startSlideShow)
 
     def f11_pressed(self, event):
         if self.fullscreen == False:
