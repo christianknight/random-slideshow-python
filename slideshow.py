@@ -55,6 +55,7 @@ class MySlideShow(tk.Toplevel):
         self.scaled_h = None                        # for holding the height of the currently displayed image
         self.random = config["SETTINGS"]["RANDOM"]
         self.topmost = config["SETTINGS"]["TOPMOST"]
+        self.visibility = True
 
         self.attributes('-topmost', self.topmost)
         self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
@@ -252,6 +253,16 @@ class MySlideShow(tk.Toplevel):
             self.topmost = False
 
         self.attributes('-topmost', self.topmost)
+
+    def shift_key_pressed(self, event):
+        self.slideshow_cancel()
+        if self.visibility == True:
+            print("Slideshow visiblity disabled, press \"Shift\" to restore")
+            self.visibility == False:
+        else:
+            print("Restoring slideshow visibility")
+            self.visibility == True:
+            self.showImage(self.imageList[self.forward_index])
 
     def do_mouse_nudge(self):
         pyautogui.move(0, 1)     # move the mouse cursor down by 1 pixel
