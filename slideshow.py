@@ -10,6 +10,7 @@ import yaml
 import pyautogui
 from pathlib import Path
 import logging
+from threading import Timer
 
 base_path = Path(__file__).parent
 config_file_path = (base_path / "config.yml").resolve()
@@ -55,6 +56,7 @@ class MySlideShow(tk.Toplevel):
         self.scaled_h = None                        # for holding the height of the currently displayed image
         self.random = config["SETTINGS"]["RANDOM"]
         self.topmost = config["SETTINGS"]["TOPMOST"]
+        self.timeout = config["SETTINGS"]["TIMEOUT"]
 
         self.attributes('-topmost', self.topmost)
         self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
@@ -95,6 +97,10 @@ class MySlideShow(tk.Toplevel):
         self.getImages()
         if self.random:
             shuffle(self.imageList)     # randomize the image playlist
+
+        if self.timeout != "0":
+            print(f"Setting timeout to {self.timeout} minutes")
+            self.timer = Timer(self.timeout * 60, lambda e: quit())
 
         self.startSlideShow()
 

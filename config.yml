@@ -9,6 +9,7 @@ SETTINGS:
   POSITION_Y: 0
   FULLSCREEN: True
   RANDOM: True
+  TIMEOUT: 5
 
 # ----- Description of settings -----
 # DURATION - Time interval, in seconds, between image transitions. Required.
@@ -23,3 +24,4 @@ SETTINGS:
 # POSITION_X, POSITION_Y - Starting position, in pixels, from which the image is displayed relative to the top-left corner of the display, (0, 0). Required.
 # FULLSCREEN - Flag to indicate whether the slideshow should take up the full screen with black background. Required.
 # RANDOM - Flag to indicate whether to play the slideshow in random order or not. Required.
+# TIMEOUT - Time, in minutes, for which the slideshow should run before shutting off. Setting of "0" disables the timeout.
