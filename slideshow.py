@@ -156,7 +156,7 @@ class MySlideShow(tk.Toplevel):
         # print(f"Image size (x, y) = ({img_w}, {img_h})")
         width, height = min(self.size_max_x, img_w), min(self.size_max_y, img_h)
         # print(f"Scaled size (x, y) = ({width}, {height})")
-        image.thumbnail((width, height), Image.ANTIALIAS)
+        image.thumbnail((width, height), Image.LANCZOS)
 
         # Store the size of the image to be displayed
         self.scaled_w, self.scaled_h = image.size
