@@ -41,20 +41,20 @@ class MySlideShow(tk.Toplevel):
         self.persistent_image = None    # For saving reference to currently displayed image
         self.imageList = []             # For holding the list of image names in the pool
         self.imageListLen = 0           # The length of the image list
-        self.duration = config["SETTINGS"]["DURATION"]
+        self.duration = config["DURATION"]
         self.size_max_x = self.winfo_screenwidth()  # Max photo width based on display dimensions
         self.size_max_y = self.winfo_screenheight() # Max photo height based on display dimensions
-        self.position_x = config["SETTINGS"]["POSITION_X"]
-        self.position_y = config["SETTINGS"]["POSITION_Y"]
-        self.fullscreen = config["SETTINGS"]["FULLSCREEN"]
+        self.position_x = config["POSITION_X"]
+        self.position_y = config["POSITION_Y"]
+        self.fullscreen = config["FULLSCREEN"]
         self.slideshow_paused = False               # flag to keep track of if the slideshow is paused from user input
         self.forward_index = -1                     # index for tracking position in playlist in order to show consecutive random images
         self.reverse_index = -1                     # index for tracking position in playlist in order to show the previously displayed images
-        self.image_save_path = config["SETTINGS"]["IMG_SAVE_PATH"]
+        self.image_save_path = config["IMG_SAVE_PATH"]
         self.scaled_w = None                        # for holding the width of the currently displayed image
         self.scaled_h = None                        # for holding the height of the currently displayed image
-        self.random = config["SETTINGS"]["RANDOM"]
-        self.topmost = config["SETTINGS"]["TOPMOST"]
+        self.random = config["RANDOM"]
+        self.topmost = config["TOPMOST"]
 
         self.attributes('-topmost', self.topmost)
         self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
@@ -102,8 +102,8 @@ class MySlideShow(tk.Toplevel):
         # Get image path(s) from command line arguments or the config file - otherwise, use the present working directory
         if len(sys.argv) > 1:
             image_dirs = sys.argv[1:]
-        elif "IMG_DIRECTORY" in config["SETTINGS"]:  # If present, use the image directory path from the config file
-            image_dirs = config["SETTINGS"]["IMG_DIRECTORY"]
+        elif "IMG_DIRECTORY" in config:  # If present, use the image directory path from the config file
+            image_dirs = config["IMG_DIRECTORY"]
         else:   # Use the present working directory if no other path is found
             image_dirs = '.'
 
