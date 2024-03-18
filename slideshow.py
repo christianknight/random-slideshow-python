@@ -220,7 +220,7 @@ class MySlideShow(tk.Toplevel):
     def pause_resume_evt(self, event):
         self.slideshow_cancel()
         if self.slideshow_paused == False:
-            print("Slideshow paused, press space to resume")
+            print("Slideshow paused")
             self.slideshow_paused = True
         else:
             print("Resuming slideshow")
@@ -243,10 +243,10 @@ class MySlideShow(tk.Toplevel):
 
     def overlap_toggle_evt(self, event):
         if self.topmost == False:
-            print("Enabling topmost window mode")
+            print("Enabling always-on-top window mode")
             self.topmost = True
         else:
-            print("Disabling topmost window mode")
+            print("Disabling always-on-top window mode")
             self.topmost = False
 
         self.attributes('-topmost', self.topmost)
