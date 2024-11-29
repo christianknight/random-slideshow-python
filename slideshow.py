@@ -60,8 +60,8 @@ class MySlideShow(tk.Toplevel):
         self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
         self.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(),0,0))
 
-        # Remove window decorations (differently for Linux and Windows)
-        if sys.platform == "linux" or sys.platform == "linux2":
+        # Remove window decorations (differently for Linux/macOS and Windows)
+        if sys.platform == "linux" or sys.platform == "linux2" or sys.platform == "darwin":
             self.wm_attributes('-type', 'splash')
             if self.fullscreen:
                 self.attributes('-fullscreen', True)
