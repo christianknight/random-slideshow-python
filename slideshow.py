@@ -7,7 +7,6 @@ import os
 from random import shuffle
 from shutil import copy
 import yaml
-import pyautogui
 from pathlib import Path
 import logging
 
@@ -130,7 +129,6 @@ class MySlideShow(tk.Toplevel):
         if not self.slideshow_paused:                           # check if the slideshow is currently puased
             self.index_next_random_image()                      # going forward in random list, update the indexing variables
             self.showImage(self.imageList[self.forward_index])  # get next photo from a random image and show it
-            self.do_mouse_nudge()    # keep the screensaver from activating
             self._job = self.after(self.duration * 1000, self.startSlideShow)   # recursion - after the set duration, repeat
 
     def index_next_random_image(self):
@@ -252,10 +250,6 @@ class MySlideShow(tk.Toplevel):
             self.topmost = False
 
         self.attributes('-topmost', self.topmost)
-
-    def do_mouse_nudge(self):
-        pyautogui.move(0, 1)     # move the mouse cursor down by 1 pixel
-        pyautogui.move(0, -1)    # move the mouse cursor up by 1 pixel
 
 slideShow = HiddenRoot()
 slideShow.mainloop()
