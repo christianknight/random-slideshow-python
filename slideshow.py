@@ -75,18 +75,18 @@ class MySlideShow(tk.Toplevel):
         self.label.focus_force()
 
         # set key binding actions
-        self.bind("<Button-3>", lambda e: quit())                        # terminate the slideshow on single right-click
-        self.bind("<Double-Button-1>", self.copy_image)                  # copy the current photo into the destination directory on left mouse double-click
-        self.bind("<Return>", self.copy_image)                           # copy the current photo into the destination directory on return (enter) keypress
-        self.bind("<Escape>", lambda e: quit())                          # terminate the slideshow on escape keypress
-        self.bind("<Button-1>", self.mouse_click_left)                   # capture the x-y mouse coordinates on single left-click
-        self.bind("<Left>", self.left_arrow_pressed)                     # jump to the previous image on left-arrow keypress
-        self.bind("<Right>", self.right_arrow_pressed)                   # jump to the next image on right-arrow keypress
-        self.bind("<space>", self.spacebar_pressed)                      # pause or resume the slideshow on spacebar keypress
-        self.bind("<Up>", self.up_arrow_pressed)                         # increase the photo duration by 1 second on up arrow keypress
-        self.bind("<Down>", self.down_arrow_pressed)                     # decrease the photo duration by 1 second on down arrow keypress
-        self.bind("<F11>", self.f11_pressed)                             # toggle fullscreen mode on F11 keypress
-        self.bind("<MouseWheel>", self.scroll_wheel_activated)           # toggle topmost mode on scroll wheel movement
+        self.bind("<Escape>", lambda e: quit())
+        self.bind("<Button-3>", lambda e: quit())
+        self.bind("<Double-Button-1>", self.copy_img_evt)
+        self.bind("<Return>", self.copy_img_evt)
+        self.bind("<Button-1>", self.debug_evt)
+        self.bind("<Left>", self.prev_img_event)
+        self.bind("<Right>", self.next_img_evt)
+        self.bind("<space>", self.pause_resume_evt)
+        self.bind("<Up>", self.duration_up_evt)
+        self.bind("<Down>", self.duration_down_evt)
+        self.bind("<F11>", self.fullscreen_toggle_evt)
+        self.bind("<MouseWheel>", self.overlap_toggle_evt)
 
         # Hide the mouse cursor
         self.config(cursor="none")
@@ -173,13 +173,13 @@ class MySlideShow(tk.Toplevel):
             self.after_cancel(self._job)
             self._job = None
 
-    def mouse_click_left(self, event):
+    def debug_evt(self, event):
         global left_click_x, left_click_y
         left_click_x = event.x
         left_click_y = event.y
         # print(f"Mouse left-click at ({left_click_x}, {left_click_y})")
 
-    def copy_image(self, event):
+    def copy_img_evt(self, event):
         if self.reverse_index < self.forward_index:                                   # check if backtracking
             copy(self.imageList[self.reverse_index], self.image_save_path)     # copy the current file into the destination directory
             print(f"{self.imageList[self.reverse_index]} copied to \"{self.image_save_path}\"")
@@ -187,7 +187,7 @@ class MySlideShow(tk.Toplevel):
             copy(self.imageList[self.forward_index], self.image_save_path)     # copy the current file into the destination directory
             print(f"{self.imageList[self.forward_index]} copied to \"{self.image_save_path}\"")
 
-    def left_arrow_pressed(self, event):
+    def prev_img_event(self, event):
         self.slideshow_cancel()      # kill the slideshow
         
         if self.reverse_index > 0:
@@ -197,7 +197,7 @@ class MySlideShow(tk.Toplevel):
 
         self._job = self.after(self.duration * 1000, self.startSlideShow)       # after the set duration, continue the slideshow
 
-    def right_arrow_pressed(self, event):
+    def next_img_evt(self, event):
         self.slideshow_cancel()                                              # kill the slideshow
 
         if self.reverse_index < self.forward_index:                   # already backtracking
@@ -209,15 +209,15 @@ class MySlideShow(tk.Toplevel):
 
         self._job = self.after(self.duration * 1000, self.startSlideShow)       # after the set duration, continue the slideshow
 
-    def up_arrow_pressed(self, event):
+    def duration_up_evt(self, event):
         self.duration += 1   # increase the photo duration by 1 second
         print(f"Photo duration: {self.duration} seconds")
 
-    def down_arrow_pressed(self, event):
+    def duration_down_evt(self, event):
         self.duration -= 1   # decrease the photo duration by 1 second
         print(f"Photo duration: {self.duration} seconds")
 
-    def spacebar_pressed(self, event):
+    def pause_resume_evt(self, event):
         self.slideshow_cancel()
         if self.slideshow_paused == False:
             print("Slideshow paused, press space to resume")
@@ -227,7 +227,7 @@ class MySlideShow(tk.Toplevel):
             self.slideshow_paused = False
             self._job = self.after(0, self.startSlideShow)
 
-    def f11_pressed(self, event):
+    def fullscreen_toggle_evt(self, event):
         if self.fullscreen == False:
             print("Entering fullscreen mode")
             self.fullscreen = True
@@ -241,7 +241,7 @@ class MySlideShow(tk.Toplevel):
             self.wm_geometry("{}x{}+{}+{}".format(self.scaled_w,self.scaled_h, 0, 0))
             self.attributes('-fullscreen', False)
 
-    def scroll_wheel_activated(self, event):
+    def overlap_toggle_evt(self, event):
         if self.topmost == False:
             print("Enabling topmost window mode")
             self.topmost = True
