@@ -126,8 +126,8 @@ class MySlideShow(tk.Toplevel):
 
     def getImages(self):
         # Get image path(s) from command line arguments or the config file - otherwise, use the present working directory
-        if len(sys.argv) > 1:
-            image_dirs = sys.argv[1:]
+        if hasattr(args, "path"):
+            image_dirs = args.path
         elif "IMG_DIRECTORY" in config:  # If present, use the image directory path from the config file
             image_dirs = config["IMG_DIRECTORY"]
         else:   # Use the present working directory if no other path is found
