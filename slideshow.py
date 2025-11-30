@@ -10,6 +10,15 @@ import yaml
 from pathlib import Path
 import logging
 
+# Configure the logging module
+logging.basicConfig(
+    format='%(asctime)s - %(levelname)s - %(message)s', 
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+
+# Create a logger instance
+logger = logging.getLogger(__name__)
+
 base_path = Path(__file__).parent
 config_file_path = (base_path / "config.yml").resolve()
 
@@ -122,8 +131,8 @@ class MySlideShow(tk.Toplevel):
 
         # Retrieve and print the length of the image list
         self.imageListLen = len(self.imageList)
-        print(f"{self.imageListLen} images loaded from \"{image_dirs}\"")
-        print(f"Image save path is \"{self.image_save_path}\"")
+        logger.info("%d images loaded from \"%s\"", self.imageListLen, image_dirs)
+        logger.info("Image save path is \"%s\"", self.image_save_path)
 
     def startSlideShow(self):
         if not self.slideshow_paused:                           # check if the slideshow is currently puased
@@ -148,12 +157,12 @@ class MySlideShow(tk.Toplevel):
             return
 
         # Print photo details to output
-        print(filename)
+        logger.info("%s", filename)
 
         img_w, img_h = image.size
-        # print(f"Image size (x, y) = ({img_w}, {img_h})")
+        logger.debug("Image size (x, y) = (%d, %d)", img_w, img_h)
         width, height = min(self.size_max_x, img_w), min(self.size_max_y, img_h)
-        # print(f"Scaled size (x, y) = ({width}, {height})")
+        logger.debug("Scaled size (x, y) = (%d, %d)", width, height)
         image.thumbnail((width, height), Image.LANCZOS)
 
         # Store the size of the image to be displayed
@@ -177,15 +186,15 @@ class MySlideShow(tk.Toplevel):
         global left_click_x, left_click_y
         left_click_x = event.x
         left_click_y = event.y
-        # print(f"Mouse left-click at ({left_click_x}, {left_click_y})")
+        logger.debug("Mouse left-click at (%d, %d)", left_click_x, left_click_y)
 
     def copy_img_evt(self, event):
         if self.reverse_index < self.forward_index:                                   # check if backtracking
             copy(self.imageList[self.reverse_index], self.image_save_path)     # copy the current file into the destination directory
-            print(f"{self.imageList[self.reverse_index]} copied to \"{self.image_save_path}\"")
+            logger.info("%s copied to \"%s\"", self.imageList[self.reverse_index], self.image_save_path)
         else:
             copy(self.imageList[self.forward_index], self.image_save_path)     # copy the current file into the destination directory
-            print(f"{self.imageList[self.forward_index]} copied to \"{self.image_save_path}\"")
+            logger.info("%s copied to \"%s\"", self.imageList[self.forward_index], self.image_save_path)
 
     def prev_img_event(self, event):
         self.slideshow_cancel()      # kill the slideshow
@@ -211,31 +220,31 @@ class MySlideShow(tk.Toplevel):
 
     def duration_up_evt(self, event):
         self.duration += 1   # increase the photo duration by 1 second
-        print(f"Photo duration: {self.duration} seconds")
+        logger.info("Photo duration: %d seconds", self.duration)
 
     def duration_down_evt(self, event):
         self.duration -= 1   # decrease the photo duration by 1 second
-        print(f"Photo duration: {self.duration} seconds")
+        logger.info("Photo duration: %d seconds", self.duration)
 
     def pause_resume_evt(self, event):
         self.slideshow_cancel()
         if self.slideshow_paused == False:
-            print("Slideshow paused")
+            logger.info("Slideshow paused")
             self.slideshow_paused = True
         else:
-            print("Resuming slideshow")
+            logger.info("Resuming slideshow")
             self.slideshow_paused = False
             self._job = self.after(0, self.startSlideShow)
 
     def fullscreen_toggle_evt(self, event):
         if self.fullscreen == False:
-            print("Entering fullscreen mode")
+            logger.info("Entering fullscreen mode")
             self.fullscreen = True
             self.configure(bg='black', width=self.winfo_screenwidth(), height=self.winfo_screenheight())
             self.wm_geometry("{}x{}+{}+{}".format(self.winfo_screenwidth(),self.winfo_screenheight(), 0, 0))
             self.attributes('-fullscreen', True)
         else:
-            print("Leaving fullscreen mode")
+            logger.info("Leaving fullscreen mode")
             self.fullscreen = False
             self.configure(bg='black', width=self.scaled_w, height=self.scaled_h)
             self.wm_geometry("{}x{}+{}+{}".format(self.scaled_w,self.scaled_h, 0, 0))
@@ -243,10 +252,10 @@ class MySlideShow(tk.Toplevel):
 
     def overlap_toggle_evt(self, event):
         if self.topmost == False:
-            print("Enabling always-on-top window mode")
+            logger.info("Enabling always-on-top window mode")
             self.topmost = True
         else:
-            print("Disabling always-on-top window mode")
+            logger.info("Disabling always-on-top window mode")
             self.topmost = False
 
         self.attributes('-topmost', self.topmost)
