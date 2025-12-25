@@ -143,6 +143,15 @@ class MySlideShow(tk.Toplevel):
     def showImage(self, filename):
         try:
             image = Image.open(filename)
+            # Correct orientation using EXIF data
+            if hasattr(image, '_getexif'):  
+                exif = image._getexif()
+                if exif and 0x0112 in exif:  # 0x0112 is the orientation tag
+                    orientation = exif[0x0112]
+                    rotate_dict = {3: 180, 6: 270, 8: 90}
+                    if orientation in rotate_dict:
+                        image = image.rotate(rotate_dict[orientation], expand=True)
+     
         except Exception:
             logging.exception(f"Error occurred while opening {filename}")
             return
